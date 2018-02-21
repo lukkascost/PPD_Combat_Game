@@ -1,5 +1,7 @@
 package Communication.Sockets;
 
+import Communication.CommonStatic;
+
 import java.io.*;
 
 public class SocketSend extends Thread {
@@ -13,11 +15,11 @@ public class SocketSend extends Thread {
 
     public void run() {
         while (run) {
-            if (SocketCommunication.changedString) {
+            if (CommonStatic.changedString) {
                 try {
-                    this.ostream.writeUTF(SocketCommunication.protocolMsg2Send);
+                    this.ostream.writeUTF(CommonStatic.protocolMsg2Send);
                     this.ostream.flush();
-                    SocketCommunication.changedString = false;
+                    CommonStatic.changedString = false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -10,8 +10,6 @@ public class ApplicationRun {
     public final int widthGame = 480;
     public final int heightGame = 560;
 
-
-
     /*****************************
      * VARIAVEIS DA CLASSE MAIN.
      *****************************/

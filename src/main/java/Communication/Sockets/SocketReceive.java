@@ -1,5 +1,7 @@
 package Communication.Sockets;
 
+import Communication.CommonStatic;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -17,12 +19,12 @@ public class SocketReceive extends  Thread{
     public void run(){
         while (run) {
             try {
-                SocketCommunication.protocolMsgReceived = istream.readUTF();
+                CommonStatic.protocolMsgReceived = istream.readUTF();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            SocketCommunication.receivedString = true;
-            while(SocketCommunication.receivedString){}
+            CommonStatic.receivedString = true;
+            while(CommonStatic.receivedString){}
         }
     }
 

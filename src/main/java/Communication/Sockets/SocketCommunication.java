@@ -1,5 +1,6 @@
 package Communication.Sockets;
 
+import Communication.CommonStatic;
 import Communication.ICommunication;
 import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
@@ -17,11 +18,7 @@ public class SocketCommunication implements Communication.ICommunication {
     private SocketSend socketSend;
     private SocketReceive socketReceive;
 
-    static boolean changedString = false;
-    static boolean receivedString = false;
 
-    static String protocolMsg2Send = "";
-    static String protocolMsgReceived = "";
 
     public SocketCommunication(String host, int port) throws IOException {
         this.host = host;
@@ -31,12 +28,12 @@ public class SocketCommunication implements Communication.ICommunication {
     }
 
     public void send(String msg) {
-        protocolMsg2Send = msg;
-        changedString = true;
+        CommonStatic.protocolMsg2Send = msg;
+        CommonStatic.changedString = true;
     }
 
     public String receivedMsg() {
-        return protocolMsgReceived;
+        return CommonStatic.protocolMsgReceived;
     }
 
     public void connect() throws IOException {
