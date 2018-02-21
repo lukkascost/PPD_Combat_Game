@@ -7,8 +7,8 @@ public class ApplicationRun {
     /****************************
      * VARIAVEIS DO SISTEMA.
      ****************************/
-    public final int widthGame = 480;
-    public final int heightGame = 560;
+    private final int widthGame = 480;
+    private final int heightGame = 560;
 
     /*****************************
      * VARIAVEIS DA CLASSE MAIN.
@@ -20,7 +20,7 @@ public class ApplicationRun {
     private ChatText chatTextLog;
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         new ApplicationRun().startApp();
     }
 
