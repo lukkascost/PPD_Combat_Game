@@ -1,3 +1,5 @@
+package Chat;
+
 import javax.swing.*;
 import java.awt.*;
 

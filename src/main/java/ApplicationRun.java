@@ -1,13 +1,15 @@
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
+import Chat.ChatPanel;
+import Chat.ChatText;
 
-public class Main {
+import javax.swing.*;
+
+public class ApplicationRun {
     /****************************
      * VARIAVEIS DO SISTEMA.
      ****************************/
     public final int widthGame = 480;
-    public final int heighGame = 560;
+    public final int heightGame = 560;
+
 
 
     /*****************************
@@ -21,7 +23,7 @@ public class Main {
 
 
     public static void main(String[] args) throws InterruptedException {
-        new Main().startApp();
+        new ApplicationRun().startApp();
     }
 
     private void startApp() {
@@ -30,7 +32,7 @@ public class Main {
         mainPannel = new JPanel();
         mainPannel.setLayout(null);
 
-        gamePannel = new GamePanel(widthGame,heighGame);
+        gamePannel = new GamePanel(widthGame,heightGame);
 
         chatPannel = new ChatPanel();
         chatPannel.add(chatTextLog);

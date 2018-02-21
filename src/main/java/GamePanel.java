@@ -5,11 +5,9 @@ import java.util.ArrayList;
 public class GamePanel extends JPanel  implements  IGamePanel {
     private ArrayList<JTextField> table = new ArrayList<JTextField>();
 
-
-    public GamePanel(int widthGame,int heighGame) {
-
+    public GamePanel(int widthGame,int heightGame) {
         this.setLayout(null);
-        this.setBounds(0,0,widthGame,heighGame);
+        this.setBounds(0,0,widthGame,heightGame);
         this.setBorder(BorderFactory.createLineBorder(Color.red));
 
         int widthOfSquare = (int) (widthGame*0.09f);
