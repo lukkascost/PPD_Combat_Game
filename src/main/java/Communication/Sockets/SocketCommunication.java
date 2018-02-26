@@ -18,8 +18,6 @@ public class SocketCommunication implements Communication.ICommunication {
     private SocketSend socketSend;
     private SocketReceive socketReceive;
 
-
-
     public SocketCommunication(String host, int port) throws IOException {
         this.host = host;
         this.port = port;

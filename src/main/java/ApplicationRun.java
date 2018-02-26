@@ -16,8 +16,7 @@ public class ApplicationRun {
     private MainFrame frame;
     private JPanel mainPannel;
     private GamePanel gamePannel;
-    private ChatPanel chatPannel;
-    private ChatText chatTextLog;
+    public ChatPanel chatPannel;
 
 
     public static void main(String[] args)  {
@@ -25,7 +24,6 @@ public class ApplicationRun {
     }
 
     private void startApp() {
-        chatTextLog = new ChatText();
 
         mainPannel = new JPanel();
         mainPannel.setLayout(null);
@@ -33,7 +31,6 @@ public class ApplicationRun {
         gamePannel = new GamePanel(widthGame,heightGame);
 
         chatPannel = new ChatPanel();
-        chatPannel.add(chatTextLog);
 
         mainPannel.add(gamePannel);
         mainPannel.add(chatPannel);
