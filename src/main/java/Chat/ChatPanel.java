@@ -16,7 +16,7 @@ public class ChatPanel extends JPanel{
     public ChatPanel() {
         this.writeToSend = new JTextField();
         this.chatTextLog = new ChatText();
-        this.send = new JButton();
+        this.send = new JButton(new ImageIcon("send.png"));
         this.abstractAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 onClick();
@@ -30,12 +30,16 @@ public class ChatPanel extends JPanel{
         send.addActionListener(this.abstractAction);
 
 
-
         writeToSend.setBounds(10,415,320,30);
         writeToSend.setBorder(BorderFactory.createLineBorder(Color.green));
         writeToSend.addActionListener(this.abstractAction);
 
-        this.add(chatTextLog);
+
+        JScrollPane sp = new JScrollPane(chatTextLog);   // JTextArea is placed in a JScrollPane.
+        sp.setBounds(10,10,360,400);
+        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        this.add(sp);
         this.add(writeToSend);
         this.add(send);
 
@@ -47,10 +51,12 @@ public class ChatPanel extends JPanel{
 
 
     private void onClick(){
-        this.chatTextLog.setText(this.chatTextLog.getText() +"\nVocê: "+  this.writeToSend.getText());
-        this.writeToSend.setText("");
 
-        //TODO implementar envio na communicacao.
+        if (!this.writeToSend.getText().equals("")) {
+            this.chatTextLog.setText(this.chatTextLog.getText() + "\nVocê: " + this.writeToSend.getText());
+            this.writeToSend.setText("");
+            //TODO implementar envio na communicacao.
+        }
     }
 
 
