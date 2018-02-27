@@ -1,9 +1,9 @@
 package Chat;
 
+import Communication.CommonStatic;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ChatPanel extends JPanel{
 
@@ -16,7 +16,7 @@ public class ChatPanel extends JPanel{
     public ChatPanel() {
         this.writeToSend = new JTextField();
         this.chatTextLog = new ChatText();
-        this.send = new JButton(new ImageIcon("send.png"));
+        this.send = new JButton("->",new ImageIcon("src/java/Chat/send.png"));
         this.abstractAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 onClick();
@@ -25,13 +25,9 @@ public class ChatPanel extends JPanel{
 
 
         send.setBounds(335,415,40,30);
-        send.setBorder(BorderFactory.createLineBorder(Color.red));
-
         send.addActionListener(this.abstractAction);
 
-
         writeToSend.setBounds(10,415,320,30);
-        writeToSend.setBorder(BorderFactory.createLineBorder(Color.green));
         writeToSend.addActionListener(this.abstractAction);
 
 
@@ -45,20 +41,24 @@ public class ChatPanel extends JPanel{
 
         this.setLayout(null);
         this.setBounds(500,0,380,560);
-        this.setBorder(BorderFactory.createLineBorder(Color.blue));
+//        this.setBorder(BorderFactory.createLineBorder(Color.blue));
         this.setVisible(true);
     }
 
-
     private void onClick(){
-
         if (!this.writeToSend.getText().equals("")) {
-            this.chatTextLog.setText(this.chatTextLog.getText() + "\nVocê: " + this.writeToSend.getText());
+            this.chatTextLog.append("Você: " + this.writeToSend.getText());;
+            CommonStatic.protocolMsg2Send = this.writeToSend.getText();
+            CommonStatic.onDataSend.release();
             this.writeToSend.setText("");
-            //TODO implementar envio na communicacao.
         }
     }
 
+    public ChatText getChatTextLog() {
+        return chatTextLog;
+    }
 
-
+    public void setChatTextLog(ChatText chatTextLog) {
+        this.chatTextLog = chatTextLog;
+    }
 }

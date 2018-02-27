@@ -11,21 +11,20 @@ public class SocketSend extends Thread {
 
     public SocketSend(DataOutputStream outputStream) {
         this.ostream = outputStream;
+        this.start();
     }
-
+    @Override
     public void run() {
         while (run) {
-            if (CommonStatic.changedString) {
-                try {
-                    this.ostream.writeUTF(CommonStatic.protocolMsg2Send);
-                    this.ostream.flush();
-                    CommonStatic.changedString = false;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            try {
+                CommonStatic.onDataSend.acquire();
+                this.ostream.writeUTF(CommonStatic.protocolMsg2Send);
+                this.ostream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
 }
-
