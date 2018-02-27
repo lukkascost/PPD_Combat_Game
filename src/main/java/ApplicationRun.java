@@ -1,4 +1,5 @@
 import Chat.ChatPanel;
+import Communication.CommonStatic;
 import Communication.ICommunication;
 import Communication.Sockets.SocketCommunication;
 
@@ -19,8 +20,6 @@ public class ApplicationRun extends Thread {
     private JPanel mainPannel;
     private GamePanel gamePannel;
     public static ChatPanel chatPannel;
-
-
 
     public static void main(String[] args)  {
         new ApplicationRun().start();
@@ -46,19 +45,19 @@ public class ApplicationRun extends Thread {
         try {
             socketCommunication = new SocketCommunication("127.0.0.1",4055);
             socketCommunication.connect();
-            frame.setTitle("SERVER");
+            frame.setTitle("CLIENT");
         } catch (IOException e) {
             try {
                 socketCommunication = new SocketCommunication(4055);
                 socketCommunication.connect();
-                frame.setTitle("CLIENT");
+                frame.setTitle("SERVER");
 
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
         new ThreadChatReceive().start();
-
+        CommonStatic.isConnected = true;
     }
 
 }

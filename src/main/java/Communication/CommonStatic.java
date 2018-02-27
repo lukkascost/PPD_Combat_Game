@@ -3,6 +3,7 @@ package Communication;
 import java.util.concurrent.Semaphore;
 
 public abstract class CommonStatic {
+    public static boolean isConnected = false;
 
     public static Semaphore onDataSend = new Semaphore(0);
     public static Semaphore onDataReceive = new Semaphore(0);
