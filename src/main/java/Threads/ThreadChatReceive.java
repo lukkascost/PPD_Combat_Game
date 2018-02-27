@@ -1,5 +1,7 @@
+package Threads;
 
 import Communication.CommonStatic;
+import MainPackage.ApplicationRun;
 
 public class ThreadChatReceive extends Thread{
     public boolean loop = true;

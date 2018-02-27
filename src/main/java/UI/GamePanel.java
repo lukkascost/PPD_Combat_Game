@@ -1,8 +1,10 @@
+package UI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GamePanel extends JPanel  implements  IGamePanel {
+public class GamePanel extends JPanel  implements IGamePanel {
     private ArrayList<JTextField> table = new ArrayList<JTextField>();
 
     public GamePanel(int widthGame,int heightGame) {
@@ -23,6 +25,9 @@ public class GamePanel extends JPanel  implements  IGamePanel {
                 this.add(field);
             }
         }
+
+
+
     }
 
     public void moveObject() {

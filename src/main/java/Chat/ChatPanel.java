@@ -3,6 +3,7 @@ package Chat;
 import Communication.CommonStatic;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class ChatPanel extends JPanel{
@@ -10,6 +11,8 @@ public class ChatPanel extends JPanel{
     private JTextField writeToSend;
     private JButton send;
     private ChatText chatTextLog;
+    private JTextArea log = new JTextArea();
+    private JScrollPane logSP = new JScrollPane(log);
     private AbstractAction abstractAction;
 
 
@@ -34,10 +37,17 @@ public class ChatPanel extends JPanel{
         sp.setBounds(10,10,360,400);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        logSP.setBounds(10,450,360,100);
+        logSP.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        log.setBackground(Color.lightGray);
+        log.setEditable(false);
+
+
+        this.add(logSP);
         this.add(sp);
         this.add(writeToSend);
         this.add(send);
-
+        this.setBackground(Color.lightGray);
         this.setLayout(null);
         this.setBounds(500,0,380,560);
         this.setVisible(true);
@@ -54,7 +64,9 @@ public class ChatPanel extends JPanel{
             this.writeToSend.setText("");
         }
     }
-
+    public void writeLog(String msg){
+        this.log.append(msg+"\n");
+    }
     public ChatText getChatTextLog() {
         return chatTextLog;
     }

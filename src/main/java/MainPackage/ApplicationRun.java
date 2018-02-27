@@ -1,9 +1,13 @@
-import Chat.ChatPanel;
-import Communication.CommonStatic;
-import Communication.ICommunication;
+package MainPackage;
+
+import Chat.*;
+import Communication.*;
 import Communication.Sockets.SocketCommunication;
+import UI.*;
+import Threads.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class ApplicationRun extends Thread {
@@ -37,20 +41,25 @@ public class ApplicationRun extends Thread {
 
         mainPannel.add(gamePannel);
         mainPannel.add(chatPannel);
+        mainPannel.setBackground(Color.lightGray);
 
         frame = new MainFrame("Combate Game");
+        frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
 
         ICommunication socketCommunication;
         try {
+            chatPannel.writeLog("Aguardando conexao...");
             socketCommunication = new SocketCommunication("127.0.0.1",4055);
             socketCommunication.connect();
+            chatPannel.writeLog("Conectado!!");
             frame.setTitle("CLIENT");
         } catch (IOException e) {
             try {
                 socketCommunication = new SocketCommunication(4055);
                 socketCommunication.connect();
                 frame.setTitle("SERVER");
+                chatPannel.writeLog("Conectado!!");
 
             } catch (IOException e1) {
                 e1.printStackTrace();
