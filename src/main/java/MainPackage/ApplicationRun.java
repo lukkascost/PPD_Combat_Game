@@ -3,6 +3,7 @@ package MainPackage;
 import Chat.*;
 import Communication.*;
 import Communication.Sockets.SocketCommunication;
+import Game.Table;
 import UI.*;
 import Threads.*;
 
@@ -16,13 +17,15 @@ public class ApplicationRun extends Thread {
      ****************************/
     private final int widthGame = 480;
     private final int heightGame = 560;
+    public static final String[] peaces = new String[]{"01","02","02","02","02","02","02","02","02","03","03","03","03","03","04","04","04","04",
+            "05","05","05","05","06","06","06","06","07","07","07","08","08","09","10","FL","BO","BO","BO","BO","BO","BO"};
 
     /*****************************
      * VARIAVEIS DA CLASSE MAIN.
      *****************************/
     private MainFrame frame;
     private JPanel mainPannel;
-    private GamePanel gamePannel;
+    public static GamePanel gamePannel;
     public static ChatPanel chatPannel;
 
     public static void main(String[] args)  {
@@ -46,6 +49,10 @@ public class ApplicationRun extends Thread {
         frame = new MainFrame("Combate Game");
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
+
+        Table table = new Table();
+        table.setOnes();
+        System.out.println(table);
 
         ICommunication socketCommunication;
         try {

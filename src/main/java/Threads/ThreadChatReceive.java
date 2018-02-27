@@ -18,7 +18,8 @@ public class ThreadChatReceive extends Thread{
                     ApplicationRun.chatPannel.getChatTextLog().setText(ApplicationRun.chatPannel.getChatTextLog().getText() + "\n" + "INIMIGO: " + received);
                 }
                 else{
-                    System.out.println(received);
+                    if(received.substring(0,1).equals("2"))
+                        System.out.println(received);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

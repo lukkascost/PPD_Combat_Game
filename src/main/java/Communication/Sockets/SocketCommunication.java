@@ -1,8 +1,6 @@
 package Communication.Sockets;
 
 import Communication.CommonStatic;
-import Communication.ICommunication;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
