@@ -57,8 +57,9 @@ public class GameBackEnd {
     public String messageToSend(){
         String result = "02 ";
         for (int i = 0; i < this.peaces.size(); i++) {
-            result+= this.colors.get(i).intValue() + "" +
+            result+= this.colors.get(i).intValue() + "" ;
         }
+        return  result
     }
     public void receivedString(String[] received){
         for (int i = 0; i < received.length-1; i++) {
