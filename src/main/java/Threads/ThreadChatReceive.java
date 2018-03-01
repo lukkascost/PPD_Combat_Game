@@ -13,13 +13,14 @@ public class ThreadChatReceive extends Thread{
                 CommonStatic.onDataReceive.acquire();
                 String received = CommonStatic.protocolMsgReceived;
 
-                if (received.substring(0,1).equals("1")) {
-                    received = received.substring(1,received.length());
+                if (received.substring(0,2).equals("01")) {
+                    received = received.substring(3,received.length());
                     ApplicationRun.chatPannel.getChatTextLog().setText(ApplicationRun.chatPannel.getChatTextLog().getText() + "\n" + "INIMIGO: " + received);
                 }
                 else{
-                    if(received.substring(0,1).equals("2"))
-                        System.out.println(received);
+                    if(received.substring(0,2).equals("02")){
+                        ApplicationRun.gamePannel.moveObject(received);
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

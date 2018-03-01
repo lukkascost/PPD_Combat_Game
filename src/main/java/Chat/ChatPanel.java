@@ -59,7 +59,7 @@ public class ChatPanel extends JPanel{
         }
         if (!this.writeToSend.getText().equals("") && CommonStatic.isConnected) {
             this.chatTextLog.append("Você: " + this.writeToSend.getText());;
-            CommonStatic.protocolMsg2Send = "1"+this.writeToSend.getText();
+            CommonStatic.protocolMsg2Send = "01 "+this.writeToSend.getText();
             CommonStatic.onDataSend.release();
             this.writeToSend.setText("");
         }

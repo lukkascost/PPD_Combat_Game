@@ -8,7 +8,7 @@
     <artifactId>PPD_COMBAT</artifactId>
     <version>1.0-SNAPSHOT</version>
     <build>
-        <sourceDirectory>src</sourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <!-- Build an executable JAR -->
             <plugin>

@@ -10,4 +10,8 @@ public enum MessageType {
     MessageType(String s) {
         this.type = s;
     }
+
+    public String getType() {
+        return type;
+    }
 }
