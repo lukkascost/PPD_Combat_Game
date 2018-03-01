@@ -26,6 +26,8 @@ public class ApplicationRun extends Thread {
             "05","05","05","05","06","06","06","06","07","07","07","08","08","09","10","FL","BO","BO","BO","BO","BO","BO"};
     public static ArrayList<Color> colors = new ArrayList<>();
     public static boolean j1;
+    public static GameBackEnd gameBackEnd;
+
     /*****************************
      * VARIAVEIS DA CLASSE MAIN.
      *****************************/
@@ -61,7 +63,6 @@ public class ApplicationRun extends Thread {
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
 
-        System.out.println(new Protocol(gamePannel.getTable()));
         ICommunication socketCommunication;
         try {
             chatPannel.writeLog("Aguardando conexao...");
@@ -69,22 +70,21 @@ public class ApplicationRun extends Thread {
             socketCommunication.connect();
             j1=true;
             chatPannel.writeLog("Conectado!!");
-            frame.setTitle("CLIENT");
-
-            GameBackEnd gameBackEnd = new GameBackEnd(gamePannel.getTable());
-            gameBackEnd.setInitialValues(peaces);
+            frame.setTitle("J1");
         } catch (IOException e) {
             try {
                 socketCommunication = new SocketCommunication(4055);
                 socketCommunication.connect();
                 j1 = false;
-                frame.setTitle("SERVER");
+                frame.setTitle("J2");
                 chatPannel.writeLog("Conectado!!");
-
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
+        gameBackEnd=  new GameBackEnd(gamePannel.getTable());
+        gameBackEnd.setInitialValues(peaces);
+        gamePannel.updateTable(gameBackEnd);
         new ThreadChatReceive().start();
         CommonStatic.isConnected = true;
 

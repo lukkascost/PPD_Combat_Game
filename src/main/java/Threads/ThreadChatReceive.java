@@ -1,6 +1,7 @@
 package Threads;
 
 import Communication.CommonStatic;
+import Game.GameBackEnd;
 import MainPackage.ApplicationRun;
 
 public class ThreadChatReceive extends Thread{
@@ -19,7 +20,8 @@ public class ThreadChatReceive extends Thread{
                 }
                 else{
                     if(received.substring(0,2).equals("02")){
-                        ApplicationRun.gamePannel.moveObject(received);
+                        ApplicationRun.gameBackEnd.receivedString(received.split(" "));
+                        ApplicationRun.gamePannel.updateTable(ApplicationRun.gameBackEnd);
                     }
                 }
             } catch (InterruptedException e) {
