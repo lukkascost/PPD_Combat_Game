@@ -3,6 +3,7 @@ package Game;
 import Communication.CommonStatic;
 
 import javax.swing.*;
+import javax.swing.plaf.metal.MetalButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class GamePanel extends JPanel{
         for (int j=0;j<10;j++) {
             for (int i = 0; i < 10; i++) {
                 JButton field = new JButton();
+                field.setUI(new MetalButtonUI());
                 field.setBackground(colors.get(0));
                 field.setBorder(BorderFactory.createLineBorder(Color.lightGray));
                 field.setHorizontalAlignment(JTextField.CENTER);
@@ -76,9 +78,10 @@ public class GamePanel extends JPanel{
     public void updateTable(GameBackEnd game){
         for (int i = 0; i < this.table.size(); i++) {
             int color = game.getColors().get(i);
-            int text = game.getPeaces().get(i).intValue();
+            int text = game.getPieces().get(i).intValue();
 
             this.table.get(i).setBackground(colors.get(color));
+
             if(color>1) {
                 if(j1){
                     if(color == 2 && text == 0){
@@ -112,8 +115,9 @@ public class GamePanel extends JPanel{
         int line = button.getY()/38;
         int col = button.getX()/38;
         System.out.println("Line: "+line+" Col: "+col+ " Valor: "+button.getText());
+
+        gameBackEnd.movimentPiece(line,col);
         //TODO chama jogo
-        this.updateTable(gameBackEnd);
         this.sendMoviment();
     }
 

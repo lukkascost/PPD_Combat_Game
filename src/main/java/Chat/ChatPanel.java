@@ -66,6 +66,8 @@ public class ChatPanel extends JPanel{
     }
     public void writeLog(String msg){
         this.log.append(msg+"\n");
+        this.log.setCaretPosition(this.log.getDocument().getLength());
+
     }
     public ChatText getChatTextLog() {
         return chatTextLog;
