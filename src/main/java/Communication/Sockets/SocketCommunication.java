@@ -30,8 +30,6 @@ public class SocketCommunication implements Communication.ICommunication {
     }
 
     public void send(String msg) {
-//        CommonStatic.protocolMsg2Send = msg;
-//        CommonStatic.onDataSend = true;
     }
 
     public String receivedMsg() {

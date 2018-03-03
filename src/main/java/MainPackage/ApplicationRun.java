@@ -46,6 +46,8 @@ public class ApplicationRun extends Thread {
         colors.add(new Color(61 ,165 ,184));
         colors.add(new Color(255,228,225));
         colors.add(new Color(175,238,238));
+        colors.add(new Color(255,255,179));
+
         Collections.shuffle(Arrays.asList(peaces));
 
         mainPannel = new JPanel();

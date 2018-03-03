@@ -17,7 +17,8 @@ public class GamePanel extends JPanel{
     private JPanel tablePannel = new JPanel();
     private ArrayList<JButton> table = new ArrayList<JButton>();
     private AbstractAction abstractAction;
-
+    public static boolean firstClick = true;
+    public static int positionFirst[] = new int[]{12,12};
 
 
     public GamePanel(int widthGame,int heightGame) {
@@ -25,6 +26,7 @@ public class GamePanel extends JPanel{
         this.setLayout(null);
         this.setBounds(0,0,widthGame,heightGame);
         int widthOfSquare = (int) (widthGame*0.08f);
+
 
         this.tablePannel.setLayout(new GridLayout(10,10));
         this.tablePannel.setBounds(widthOfSquare,widthOfSquare,widthOfSquare*10,widthOfSquare*10);
@@ -116,9 +118,14 @@ public class GamePanel extends JPanel{
         int col = button.getX()/38;
         System.out.println("Line: "+line+" Col: "+col+ " Valor: "+button.getText());
 
-        gameBackEnd.movimentPiece(line,col);
-        //TODO chama jogo
+        if(firstClick) {
+            gameBackEnd.movimentPieceFirstClick(line, col);
+            //TODO chama jogo
+        }else{
+            gameBackEnd.movimentPieceSecondClick(line,col);
+        }
         this.sendMoviment();
+
     }
 
 
