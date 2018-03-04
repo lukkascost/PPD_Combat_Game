@@ -14,9 +14,7 @@ import static MainPackage.ApplicationRun.j1;
 
 public class GamePanel extends JPanel{
 
-    private JPanel tablePannel = new JPanel();
-    private ArrayList<JButton> table = new ArrayList<JButton>();
-    private AbstractAction abstractAction;
+    private ArrayList<JButton> table = new ArrayList<>();
     public static boolean firstClick = true;
     public static int positionFirst[] = new int[]{12,12};
 
@@ -28,9 +26,10 @@ public class GamePanel extends JPanel{
         int widthOfSquare = (int) (widthGame*0.08f);
 
 
-        this.tablePannel.setLayout(new GridLayout(10,10));
-        this.tablePannel.setBounds(widthOfSquare,widthOfSquare,widthOfSquare*10,widthOfSquare*10);
-        this.abstractAction = new AbstractAction() {
+        JPanel tablePanel = new JPanel();
+        tablePanel.setLayout(new GridLayout(10,10));
+        tablePanel.setBounds(widthOfSquare, widthOfSquare,widthOfSquare*10,widthOfSquare*10);
+        AbstractAction abstractAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 onClick(e);
             }
@@ -45,36 +44,32 @@ public class GamePanel extends JPanel{
                 field.setHorizontalAlignment(JTextField.CENTER);
                 field.addActionListener(abstractAction);
                 this.table.add(field);
-                this.tablePannel.add(field);
+                tablePanel.add(field);
             }
         }
-        this.add(tablePannel);
+        this.add(tablePanel);
 
-        this.setCollor(5,3, colors.get(1));
-        this.setCollor(5,4, colors.get(1));
-        this.setCollor(6,3, colors.get(1));
-        this.setCollor(6,4, colors.get(1));
+        this.setColor(5,3, colors.get(1));
+        this.setColor(5,4, colors.get(1));
+        this.setColor(6,3, colors.get(1));
+        this.setColor(6,4, colors.get(1));
 
-        this.setCollor(5,7, colors.get(1));
-        this.setCollor(5,8, colors.get(1));
-        this.setCollor(6,7, colors.get(1));
-        this.setCollor(6,8, colors.get(1));
+        this.setColor(5,7, colors.get(1));
+        this.setColor(5,8, colors.get(1));
+        this.setColor(6,7, colors.get(1));
+        this.setColor(6,8, colors.get(1));
     }
 
-    public void sendMoviment() {
+    public void sendMovement() {
         CommonStatic.protocolMsg2Send = gameBackEnd.messageToSend();
         CommonStatic.onDataSend.release();
     }
 
-    public void setCollor(int line,int col, Color color){
+    public void setColor(int line, int col, Color color){
         this.table.get((line-1)*10 + (col-1)).setBackground(color);
     }
     public ArrayList<JButton> getTable() {
         return table;
-    }
-
-    public void setTable(ArrayList<JButton> table) {
-        this.table = table;
     }
 
     public void updateTable(GameBackEnd game){
@@ -109,10 +104,6 @@ public class GamePanel extends JPanel{
                 this.table.get(i).setText("");
             }
         }
-    }
-
-    public void setCollor(int i, Color collor) {
-        this.table.get(i).setBackground(collor);
     }
 
     private void onClick(ActionEvent e){

@@ -5,7 +5,7 @@ import MainPackage.ApplicationRun;
 import javax.swing.*;
 import java.util.ArrayList;
 
-import static MainPackage.ApplicationRun.gamePannel;
+import static MainPackage.ApplicationRun.gamePanel;
 import static MainPackage.ApplicationRun.j1;
 
 public class GameBackEnd {
@@ -13,7 +13,6 @@ public class GameBackEnd {
     private ArrayList<Integer> colors;
     private ArrayList<Boolean> send;
     private boolean up,left,right, down;
-
 
     public GameBackEnd(ArrayList<JButton> fieldView){
         this.pieces = new ArrayList<>();
@@ -38,7 +37,6 @@ public class GameBackEnd {
             }
         }
     }
-
 
     public void setInitialValues(String[] pieces){
         int i = 0;
@@ -147,7 +145,7 @@ public class GameBackEnd {
     }
 
     public void movementPieceFirstClick(int lin, int cols){
-        gamePannel.updateTable(this);
+        gamePanel.updateTable(this);
         int position = (lin*10) + cols;
         if(j1){
             if(this.colors.get(position) != 3) {
@@ -172,15 +170,17 @@ public class GameBackEnd {
         }
 
         if(this.up) {
-            gamePannel.getTable().get(position-10).setBackground(ApplicationRun.colors.get(4));
-            gamePannel.getTable().get(position-10).setText("^");
+            gamePanel.getTable().get(position-10).setBackground(ApplicationRun.colors.get(4));
+            gamePanel.getTable().get(position-10).setText("^");
         }
-        if(this.down) {gamePannel.getTable().get(position+10).setBackground(ApplicationRun.colors.get(4));
-            gamePannel.getTable().get(position+10).setText("\\/");}
-        if(this.left) {gamePannel.getTable().get(position-1).setBackground(ApplicationRun.colors.get(4));
-            gamePannel.getTable().get(position-1).setText("<");}
-        if(this.right){ gamePannel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));
-            gamePannel.getTable().get(position+1).setText(">");}
+        if(this.down) {
+            gamePanel.getTable().get(position+10).setBackground(ApplicationRun.colors.get(4));
+            gamePanel.getTable().get(position+10).setText("\\/");}
+        if(this.left) {
+            gamePanel.getTable().get(position-1).setBackground(ApplicationRun.colors.get(4));
+            gamePanel.getTable().get(position-1).setText("<");}
+        if(this.right){ gamePanel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));
+            gamePanel.getTable().get(position+1).setText(">");}
 
         GamePanel.firstClick = false;
         GamePanel.positionFirst = new int[]{lin,cols};
@@ -243,7 +243,7 @@ public class GameBackEnd {
                 if (this.left) this.movementPiece(position,1,8);
             }
         }
-        gamePannel.updateTable(this);
+        gamePanel.updateTable(this);
     }
 
     private void swap(int position1, int position2){
@@ -255,13 +255,13 @@ public class GameBackEnd {
         this.colors.set(position1,this.colors.get(position2));
         this.colors.set(position2,aux);
 
-        gamePannel.sendMoviment();
+        gamePanel.sendMovement();
     }
 
     private void attack(int attacker, int to){
         this.send.set(attacker, true);
         this.pieces.set(attacker, this.pieces.get(attacker) * 10 + to);
-        gamePannel.sendMoviment();
+        gamePanel.sendMovement();
         this.pieces.set(attacker,this.pieces.get(attacker)/10);
         this.send.set(attacker,false);
     }
@@ -289,12 +289,12 @@ public class GameBackEnd {
                 this.colors.set(attacker,0);
             }
         }
-        gamePannel.sendMoviment();
+        gamePanel.sendMovement();
 
     }
 
     private void forbiddenMovement(){
-        ApplicationRun.chatPannel.writeLog("Você não pode movimentar essa peça!!!");
+        ApplicationRun.chatPanel.writeLog("Você não pode movimentar essa peça!!!");
         GamePanel.positionFirst = new int[]{12,12};
         GamePanel.firstClick = true;
     }

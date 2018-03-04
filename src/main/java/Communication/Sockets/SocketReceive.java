@@ -3,7 +3,6 @@ package Communication.Sockets;
 import Communication.CommonStatic;
 import MainPackage.ApplicationRun;
 
-import java.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.SocketException;
@@ -26,8 +25,8 @@ public class SocketReceive extends  Thread {
                 CommonStatic.protocolMsgReceived = istream.readUTF();
                 CommonStatic.onDataReceive.release();
             } catch (SocketException e) {
-                ApplicationRun.chatPannel.writeLog("Desconectado... ");
-                ApplicationRun.chatPannel.writeLog("Encerrando... ");
+                ApplicationRun.chatPanel.writeLog("Desconectado... ");
+                ApplicationRun.chatPanel.writeLog("Encerrando... ");
                 CommonStatic.isConnected=false;
                 try {
                     this.sleep(10000);

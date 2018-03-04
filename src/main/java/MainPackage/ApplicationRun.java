@@ -1,13 +1,13 @@
 package MainPackage;
 
-import Communication.*;
+import Chat.ChatPanel;
+import Communication.CommonStatic;
+import Communication.ICommunication;
 import Communication.Sockets.SocketCommunication;
-import Game.*;
-import UI.*;
-import Chat.*;
-import Protocol.*;
-
-import Threads.*;
+import Game.GameBackEnd;
+import Game.GamePanel;
+import Threads.ThreadChatReceive;
+import UI.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,24 +17,14 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class ApplicationRun extends Thread {
-    /****************************
-     * VARIAVEIS DO SISTEMA.
-     ****************************/
-    private final int widthGame = 480;
-    private final int heightGame = 560;
-    public static final String[] peaces = new String[]{"01","02","02","02","02","02","02","02","02","03","03","03","03","03","04","04","04","04",
+    private static final String[] peaces = new String[]{"01","02","02","02","02","02","02","02","02","03","03","03","03","03","04","04","04","04",
             "05","05","05","05","06","06","06","06","07","07","07","08","08","09","10","FL","BO","BO","BO","BO","BO","BO"};
     public static ArrayList<Color> colors = new ArrayList<>();
     public static boolean j1;
     public static GameBackEnd gameBackEnd;
 
-    /*****************************
-     * VARIAVEIS DA CLASSE MAIN.
-     *****************************/
-    private MainFrame frame;
-    private JPanel mainPannel;
-    public static GamePanel gamePannel;
-    public static ChatPanel chatPannel;
+    public static GamePanel gamePanel;
+    public static ChatPanel chatPanel;
 
     public static void main(String[] args)  {
         new ApplicationRun().start();
@@ -50,28 +40,30 @@ public class ApplicationRun extends Thread {
 
         Collections.shuffle(Arrays.asList(peaces));
 
-        mainPannel = new JPanel();
+        JPanel mainPannel = new JPanel();
         mainPannel.setLayout(null);
 
-        gamePannel = new GamePanel(widthGame,heightGame);
+        int widthGame = 480;
+        int heightGame = 560;
+        gamePanel = new GamePanel(widthGame, heightGame);
 
-        chatPannel = new ChatPanel();
+        chatPanel = new ChatPanel();
 
-        mainPannel.add(gamePannel);
-        mainPannel.add(chatPannel);
+        mainPannel.add(gamePanel);
+        mainPannel.add(chatPanel);
         mainPannel.setBackground(Color.lightGray);
 
-        frame = new MainFrame("Combate Game");
+        MainFrame frame = new MainFrame("Combat Game");
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
 
         ICommunication socketCommunication;
         try {
-            chatPannel.writeLog("Aguardando conexao...");
+            chatPanel.writeLog("waiting connection...");
             socketCommunication = new SocketCommunication("127.0.0.1",4055);
             socketCommunication.connect();
             j1=true;
-            chatPannel.writeLog("Conectado!!");
+            chatPanel.writeLog("Connected!!");
             frame.setTitle("J1");
         } catch (IOException e) {
             try {
@@ -79,19 +71,16 @@ public class ApplicationRun extends Thread {
                 socketCommunication.connect();
                 j1 = false;
                 frame.setTitle("J2");
-                chatPannel.writeLog("Conectado!!");
+                chatPanel.writeLog("Connected!!");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
         }
-        gameBackEnd=  new GameBackEnd(gamePannel.getTable());
+        gameBackEnd=  new GameBackEnd(gamePanel.getTable());
         gameBackEnd.setInitialValues(peaces);
-        gamePannel.updateTable(gameBackEnd);
+        gamePanel.updateTable(gameBackEnd);
         new ThreadChatReceive().start();
         CommonStatic.isConnected = true;
-
-
-
     }
 
 }

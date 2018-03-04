@@ -1,11 +1,10 @@
 package Threads;
 
 import Communication.CommonStatic;
-import Game.GameBackEnd;
 import MainPackage.ApplicationRun;
 
 public class ThreadChatReceive extends Thread{
-    public boolean loop = true;
+    private boolean loop = true;
 
     @Override
     public void run() {
@@ -16,12 +15,12 @@ public class ThreadChatReceive extends Thread{
 
                 if (received.substring(0,2).equals("01")) {
                     received = received.substring(3,received.length());
-                    ApplicationRun.chatPannel.getChatTextLog().setText(ApplicationRun.chatPannel.getChatTextLog().getText() + "\n" + "INIMIGO: " + received);
+                    ApplicationRun.chatPanel.getChatTextLog().setText(ApplicationRun.chatPanel.getChatTextLog().getText() + "\n" + "INIMIGO: " + received);
                 }
                 else{
                     if(received.substring(0,2).equals("02")){
                         ApplicationRun.gameBackEnd.receivedString(received.split(" "));
-                        ApplicationRun.gamePannel.updateTable(ApplicationRun.gameBackEnd);
+                        ApplicationRun.gamePanel.updateTable(ApplicationRun.gameBackEnd);
                     }
                 }
             } catch (InterruptedException e) {
@@ -29,8 +28,7 @@ public class ThreadChatReceive extends Thread{
             }
         }
     }
-
-    public void stopLoop(){
-        this.loop = false;
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 }
