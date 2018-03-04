@@ -121,11 +121,10 @@ public class GamePanel extends JPanel{
         int col = button.getX()/38;
 
         if(firstClick) {
-            gameBackEnd.movimentPieceFirstClick(line, col);
+            gameBackEnd.movementPieceFirstClick(line, col);
             //TODO chama jogo
         }else{
-            gameBackEnd.movimentPieceSecondClick(line,col);
-            this.sendMoviment();
+            gameBackEnd.movementPieceSecondClick(line,col);
         }
 
 

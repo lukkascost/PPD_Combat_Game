@@ -5,7 +5,6 @@ import MainPackage.ApplicationRun;
 import javax.swing.*;
 import java.util.ArrayList;
 
-import static MainPackage.ApplicationRun.chatPannel;
 import static MainPackage.ApplicationRun.gamePannel;
 import static MainPackage.ApplicationRun.j1;
 
@@ -48,76 +47,106 @@ public class GameBackEnd {
             if (st.equals("FL")) st = st.replace("FL","12");
             if(j1){
                 this.pieces.set(i+60, new Integer(st));
-                this.colors.set(i+60, new Integer(3));
-                this.colors.set(i,    new Integer(2));
+                this.colors.set(i+60, 3);
+                this.colors.set(i, 2);
             }
             else{
                 this.pieces.set(i,    new Integer(st));
-                this.colors.set(i,    new Integer(2));
-                this.colors.set(i+60, new Integer(3));
+                this.colors.set(i, 2);
+                this.colors.set(i+60, 3);
             }
             i++;
         }
     }
 
     public String messageToSend(){
-        String result = "02 ";
+        StringBuilder result = new StringBuilder("02 ");
         for (int i = 0; i < this.pieces.size(); i++) {
-            int color =  this.colors.get(i).intValue();
-            int value = this.pieces.get(i).intValue();
-            result+= color+"";
+            int color = this.colors.get(i);
+            int value = this.pieces.get(i);
+            result.append(color);
             if(color>1){
                 if(j1){
-                    if(color == 3 )
-                        result += !this.send.get(i) ?"0 ":value+" ";
+                    if(color == 3 ) {
+                        result.append(!this.send.get(i) ? "0 " : value + " ");
+                    }
                     else
-                        result += value+" ";
+                        result.append(value).append(" ");
                 }else{
-                    if(color == 2)
-                        result += !this.send.get(i) ?"0 ":value+" ";
+                    if(color == 2) {
+                        result.append(!this.send.get(i) ? "0 " : value + " ");
+                    }
                     else
-                        result += value+" ";
+                        result.append(value).append(" ");
                 }
             }else{
-                result+= "0 ";
+                result.append("0 ");
             }
 
         }
-        System.out.println("enviando: "+result);
-        return  result;
+        System.out.println("Sending: "+result);
+        return result.toString();
     }
 
     public void receivedString(String[] received){
-        System.out.printf("Recebido: "+received[0]+" ");
+        System.out.print("\nReceived: " + received[0] + " ");
+        int envio = -1;
+        int increment = 0;
         for (int i = 0; i < received.length-1; i++) {
             int color = Integer.valueOf(received[i+1].substring(0,1));
             int value = Integer.valueOf(received[i+1].substring(1,received[i+1].length()));
-            System.out.printf(received[i+1]+" ");
-            this.colors.set(i, color);
+            System.out.print(received[i+1]+" ");
+            this.colors.set(i,color);
             if(color>1){
                 if(j1){
-                    if(color == 3);
-                    else
-                        this.pieces.set(i,value);
-
+                    if(color != 3) {
+                        this.pieces.set(i, value);
+                    }
+                    if(color == 3) {
+                        if (value > 0){
+                            this.send.set(i, true);
+                            this.pieces.set(i, value);
+                        }
+                    }
                 }else{
-                    if(color == 2);
-                    else
-                        this.pieces.set(i,value);
+                    if(color != 2)
+                        this.pieces.set(i, value);
+                    if(color == 2) {
+                        if (value > 0){
+                            this.send.set(i, true);
+                            this.pieces.set(i, value);
+                        }
+                    }
                 }
                 if(value>12){
-                    if(value%10 == 5)
-                        combat(i,i-10);
+                    envio = i;
+                    switch (value%10){
+                        case 5:
+                            increment = -10;
+                            break;
+                        case 6:
+                            increment = 10;
+                            break;
+                        case 7:
+                            increment = 1;
+                            break;
+                        case 8:
+                            increment = -1;
+                            break;
+                        default:break;
+                    }
                 }
 
             }else{
-                this.pieces.set(i, new Integer(0));
+                this.pieces.set(i, 0);
             }
         }
-        System.out.println();
+        if(envio>=0){
+            combat(envio,envio+increment);
+        }
     }
 
-    public void movimentPieceFirstClick(int lin, int cols){
+    public void movementPieceFirstClick(int lin, int cols){
         gamePannel.updateTable(this);
         int position = (lin*10) + cols;
         if(j1){
@@ -129,10 +158,7 @@ public class GameBackEnd {
                 this.forbiddenMovement();
                 return;
             }
-            this.up = lin==0 ?false: (this.colors.get(position-10)!=0 && this.colors.get(position-10)!=2 ? false:true);
-            this.down = lin==9 ?false: (this.colors.get(position+10)!=0 && this.colors.get(position+10)!=2 ? false:true);
-            this.left = cols==0 ? false: (this.colors.get(position-1)!=0 && this.colors.get(position-1)!=2 ? false :true);
-            this.right = cols==9 ? false: (this.colors.get(position+1)!=0 && this.colors.get(position+1)!=2 ? false :true);
+            this.setPossibleMovements( lin,  cols,  2);
         }else{
             if(this.colors.get(position) != 2){
                 this.forbiddenMovement();
@@ -142,20 +168,22 @@ public class GameBackEnd {
                 this.forbiddenMovement();
                 return;
             }
-            this.up = lin==0 ?false: (this.colors.get(position-10)!=0 && this.colors.get(position-10)!=3 ? false:true);
-            this.down = lin==9 ?false: (this.colors.get(position+10)!=0 && this.colors.get(position+10)!=3 ? false:true);
-            this.left = cols==0 ? false: (this.colors.get(position-1)!=0 && this.colors.get(position-1)!=3 ? false :true);
-            this.right = cols==9 ? false: (this.colors.get(position+1)!=0 && this.colors.get(position+1)!=3 ? false :true);
+            this.setPossibleMovements( lin,  cols,  3);
         }
-        if(this.up) {
-            gamePannel.getTable().get(position-10).setBackground(ApplicationRun.colors.get(4)); gamePannel.getTable().get(position-10).setText("^");
-        }
-        if(this.down) {gamePannel.getTable().get(position+10).setBackground(ApplicationRun.colors.get(4));gamePannel.getTable().get(position+10).setText("\\/");}
-        if(this.left) {gamePannel.getTable().get(position-1).setBackground(ApplicationRun.colors.get(4));gamePannel.getTable().get(position-1).setText("<");}
-        if(this.right){ gamePannel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));gamePannel.getTable().get(position+1).setText(">");}
 
-        gamePannel.firstClick = false;
-        gamePannel.positionFirst = new int[]{lin,cols};
+        if(this.up) {
+            gamePannel.getTable().get(position-10).setBackground(ApplicationRun.colors.get(4));
+            gamePannel.getTable().get(position-10).setText("^");
+        }
+        if(this.down) {gamePannel.getTable().get(position+10).setBackground(ApplicationRun.colors.get(4));
+            gamePannel.getTable().get(position+10).setText("\\/");}
+        if(this.left) {gamePannel.getTable().get(position-1).setBackground(ApplicationRun.colors.get(4));
+            gamePannel.getTable().get(position-1).setText("<");}
+        if(this.right){ gamePannel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));
+            gamePannel.getTable().get(position+1).setText(">");}
+
+        GamePanel.firstClick = false;
+        GamePanel.positionFirst = new int[]{lin,cols};
     }
 
     public ArrayList<Integer> getPieces() {
@@ -166,54 +194,59 @@ public class GameBackEnd {
         return colors;
     }
 
-    public void movimentPieceSecondClick(int line, int col) {
-        int vertical = line - gamePannel.positionFirst[0];
-        int horizontal = col - gamePannel.positionFirst[1];
+    private void movementPiece(int position, int increment, int flagMovement){
+        if (j1) {
+            if(this.colors.get(position)==2){
+                this.attack(position + increment ,flagMovement);
+            }else {
+                this.swap(position, position + increment);
+            }
+        }else{
+            if(this.colors.get(position)==3){
+                this.attack(position+ increment ,flagMovement);
+            }else{
+                this.swap(position, position + increment);}
+        }
+    }
+
+    public void movementPieceSecondClick(int line, int col) {
+        int vertical = line - GamePanel.positionFirst[0];
+        int horizontal = col - GamePanel.positionFirst[1];
         int position = (line*10) + col;
 
-        gamePannel.positionFirst = new int[]{12,12};
-        gamePannel.firstClick = true;
+        GamePanel.positionFirst = new int[]{12,12};
+        GamePanel.firstClick = true;
         if(j1) {
             if (this.colors.get(position) == 3) {
-                this.movimentPieceFirstClick(line, col);
+                this.movementPieceFirstClick(line, col);
                 return;
             }
         }else {
             if (this.colors.get(position) == 2) {
-                this.movimentPieceFirstClick(line, col);
+                this.movementPieceFirstClick(line, col);
                 return;
             }
         }
-        if(vertical>1 || vertical<-1 || horizontal>1 || horizontal<-1);
-        else {
+        if(!(vertical>1 || vertical<-1 || horizontal>1 || horizontal<-1)) {
             if (vertical == -1 && horizontal == 0){
-                if (this.up) {
-                    if (j1) {
-                        if(this.colors.get(position)==2){
-                            this.attack(position+10,position ,5);
-                        }else this.swap(position, position + 10);
-                    }else{
-                        if(this.colors.get(position)==3){
-
-                        }
-                    }
-                }
+                if (this.up)
+                    this.movementPiece(position,10,5);
             }
             if (vertical == 1 && horizontal == 0) {
-                if (this.down) this.swap(position, position - 10);
+                if (this.down)
+                    this.movementPiece(position,-10,6);
             }
             if (vertical == 0 && horizontal == 1){
-                if (this.right) this.swap(position,position-1);
+                if (this.right) this.movementPiece(position,-1,7);
             }
             if (vertical == 0 && horizontal == -1){
-                if (this.left) this.swap(position,position+1);
+                if (this.left) this.movementPiece(position,1,8);
             }
         }
         gamePannel.updateTable(this);
     }
 
-
-    public void swap(int position1, int position2){
+    private void swap(int position1, int position2){
         int aux = this.pieces.get(position1);
         this.pieces.set(position1,this.pieces.get(position2));
         this.pieces.set(position2,aux);
@@ -221,26 +254,28 @@ public class GameBackEnd {
         aux = this.colors.get(position1);
         this.colors.set(position1,this.colors.get(position2));
         this.colors.set(position2,aux);
+
+        gamePannel.sendMoviment();
     }
 
-    public void attack(int attacker , int attacked , int to){
-        if(!this.send.get(attacker)) {
-            this.send.set(attacker, true);
-            this.pieces.set(attacker, this.pieces.get(attacker) * 10 + to);
-        }
+    private void attack(int attacker, int to){
+        this.send.set(attacker, true);
+        this.pieces.set(attacker, this.pieces.get(attacker) * 10 + to);
+        gamePannel.sendMoviment();
+        this.pieces.set(attacker,this.pieces.get(attacker)/10);
+        this.send.set(attacker,false);
     }
 
-    public void combat(int attacker, int attacked){
-        int value_attacker = this.pieces.get(attacker)/10;
+    private void combat(int attacker, int attacked){
+        int value_attacker = this.pieces.get(attacker)/10 ;
+        this.pieces.set(attacker,value_attacker);
         int value_attacked = this.pieces.get(attacked);
 
         if(value_attacked == value_attacker){
             this.pieces.set(attacked,0);
             this.pieces.set(attacker,0);
-
             this.colors.set(attacked,0);
             this.colors.set(attacker,0);
-
         }else{
             if(value_attacked>value_attacker){
                 this.send.set(attacked,true);
@@ -248,18 +283,27 @@ public class GameBackEnd {
                 this.colors.set(attacker,0);
             }
             else{
-                this.send.set(attacker,true);
-                this.pieces.set(attacker,value_attacker);
-                this.pieces.set(attacked,0);
-                this.colors.set(attacked,0);
+                this.pieces.set(attacked,value_attacker);
+                this.colors.set(attacked,this.colors.get(attacker));
+                this.pieces.set(attacker,0);
+                this.colors.set(attacker,0);
             }
         }
         gamePannel.sendMoviment();
+
     }
 
-    public void forbiddenMovement(){
-        chatPannel.writeLog("Você não pode movimentar essa peça!!!");
-        gamePannel.positionFirst = new int[]{12,12};
-        gamePannel.firstClick = true;
+    private void forbiddenMovement(){
+        ApplicationRun.chatPannel.writeLog("Você não pode movimentar essa peça!!!");
+        GamePanel.positionFirst = new int[]{12,12};
+        GamePanel.firstClick = true;
+    }
+
+    private void setPossibleMovements(int lin, int cols, int color){
+        int position =  (lin*10) + cols;
+        this.up = lin != 0 && (this.colors.get(position - 10) == 0 || this.colors.get(position - 10) == color);
+        this.down = lin != 9 && (this.colors.get(position + 10) == 0 || this.colors.get(position + 10) == color);
+        this.left = cols != 0 && (this.colors.get(position - 1) == 0 || this.colors.get(position - 1) == color);
+        this.right = cols != 9 && (this.colors.get(position + 1) == 0 || this.colors.get(position + 1) == color);
     }
 }
