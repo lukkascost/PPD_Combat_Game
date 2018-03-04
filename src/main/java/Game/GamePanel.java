@@ -92,6 +92,7 @@ public class GamePanel extends JPanel{
                         if(text<11) this.table.get(i).setText(text+ "");
                         if(text==11) this.table.get(i).setText("BO");
                         if(text==12) this.table.get(i).setText("FL");
+                        if(text>12) this.table.get(i).setText(text+ "");
                     }
                 }else{
                     if(color == 3 && text == 0){
@@ -100,6 +101,8 @@ public class GamePanel extends JPanel{
                         if(text<11) this.table.get(i).setText(text+ "");
                         if(text==11) this.table.get(i).setText("BO");
                         if(text==12) this.table.get(i).setText("FL");
+                        if(text>12) this.table.get(i).setText(text+ "");
+
                     }
                 }
             }else{
@@ -116,15 +119,15 @@ public class GamePanel extends JPanel{
         JButton button = (JButton) e.getSource();
         int line = button.getY()/38;
         int col = button.getX()/38;
-        System.out.println("Line: "+line+" Col: "+col+ " Valor: "+button.getText());
 
         if(firstClick) {
             gameBackEnd.movimentPieceFirstClick(line, col);
             //TODO chama jogo
         }else{
             gameBackEnd.movimentPieceSecondClick(line,col);
+            this.sendMoviment();
         }
-        this.sendMoviment();
+
 
     }
 
