@@ -22,6 +22,7 @@ public class ApplicationRun extends Thread {
     public static ArrayList<Color> colors = new ArrayList<>();
     public static boolean j1;
     public static GameBackEnd gameBackEnd;
+public static boolean run = true;
 
     public static GamePanel gamePanel;
     public static ChatPanel chatPanel;
@@ -37,6 +38,9 @@ public class ApplicationRun extends Thread {
         colors.add(new Color(255,228,225));
         colors.add(new Color(175,238,238));
         colors.add(new Color(255,255,179));
+
+        String ip = JOptionPane.showInputDialog("Digite o ip para se conectar");
+        int port = Integer.parseInt(JOptionPane.showInputDialog("Digite a porta para se conectar"));
 
         Collections.shuffle(Arrays.asList(peaces));
 
@@ -56,21 +60,22 @@ public class ApplicationRun extends Thread {
         MainFrame frame = new MainFrame("Combat Game");
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
-
         ICommunication socketCommunication;
+
         try {
             chatPanel.writeLog("waiting connection...");
-            socketCommunication = new SocketCommunication("127.0.0.1",4055);
+            socketCommunication = new SocketCommunication(ip,port);
             socketCommunication.connect();
-            j1=true;
+            j1=false;
             chatPanel.writeLog("Connected!!");
-            frame.setTitle("J1");
+            frame.setTitle("Combat Game - J2");
         } catch (IOException e) {
             try {
-                socketCommunication = new SocketCommunication(4055);
+                chatPanel.writeLog("Um servidor foi iniciado no seu ip, porta: "+port);
+                socketCommunication = new SocketCommunication(port);
                 socketCommunication.connect();
-                j1 = false;
-                frame.setTitle("J2");
+                j1 = true;
+                frame.setTitle("Combat Game - J1");
                 chatPanel.writeLog("Connected!!");
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -79,6 +84,7 @@ public class ApplicationRun extends Thread {
         gameBackEnd=  new GameBackEnd(gamePanel.getTable());
         gameBackEnd.setInitialValues(peaces);
         gamePanel.updateTable(gameBackEnd);
+        gamePanel.surrender.setEnabled(true);
         new ThreadChatReceive().start();
         CommonStatic.isConnected = true;
     }

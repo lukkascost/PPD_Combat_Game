@@ -1,6 +1,7 @@
 package Game;
 
 import Communication.CommonStatic;
+import MainPackage.ApplicationRun;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalButtonUI;
@@ -8,23 +9,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import static MainPackage.ApplicationRun.colors;
-import static MainPackage.ApplicationRun.gameBackEnd;
-import static MainPackage.ApplicationRun.j1;
+import static MainPackage.ApplicationRun.*;
 
 public class GamePanel extends JPanel{
 
     private ArrayList<JButton> table = new ArrayList<>();
     public static boolean firstClick = true;
     public static int positionFirst[] = new int[]{12,12};
-
+    public JButton surrender = new JButton();
 
     public GamePanel(int widthGame,int heightGame) {
 
         this.setLayout(null);
         this.setBounds(0,0,widthGame,heightGame);
         int widthOfSquare = (int) (widthGame*0.08f);
-
 
         JPanel tablePanel = new JPanel();
         tablePanel.setLayout(new GridLayout(10,10));
@@ -48,6 +46,20 @@ public class GamePanel extends JPanel{
             }
         }
         this.add(tablePanel);
+
+        this.surrender.setText("Render-se");
+        this.surrender.setBounds(10,500,100,30);
+        this.surrender.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CommonStatic.protocolMsg2Send = "03 ";
+                chatPanel.writeLog("Você Perdeu por desistencia!!");
+                ApplicationRun.run = false;
+                CommonStatic.onDataSend.release();
+            }
+        });
+        this.surrender.setEnabled(false);
+        this.add(surrender);
 
         this.setColor(5,3, colors.get(1));
         this.setColor(5,4, colors.get(1));
@@ -73,9 +85,9 @@ public class GamePanel extends JPanel{
     }
 
     public void updateTable(GameBackEnd game){
-        for (int i = 0; i < this.table.size(); i++) {
+        for (int i = 0; i < 100; i++) {
             int color = game.getColors().get(i);
-            int text = game.getPieces().get(i).intValue();
+            int text = game.getPieces().get(i);
 
             this.table.get(i).setBackground(colors.get(color));
 
@@ -106,6 +118,15 @@ public class GamePanel extends JPanel{
         }
     }
 
+    public void winMessage(){
+        if(j1){
+            gameBackEnd.setWinMessage(3);
+        }else{
+            gameBackEnd.setWinMessage(2);
+        }
+        this.updateTable(gameBackEnd);
+    }
+
     private void onClick(ActionEvent e){
         JButton button = (JButton) e.getSource();
         int line = button.getY()/38;
@@ -117,8 +138,6 @@ public class GamePanel extends JPanel{
         }else{
             gameBackEnd.movementPieceSecondClick(line,col);
         }
-
-
     }
 
 

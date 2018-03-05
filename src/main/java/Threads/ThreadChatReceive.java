@@ -8,7 +8,7 @@ public class ThreadChatReceive extends Thread{
 
     @Override
     public void run() {
-        while(loop) {
+        while(ApplicationRun.run) {
             try {
                 CommonStatic.onDataReceive.acquire();
                 String received = CommonStatic.protocolMsgReceived;
@@ -17,11 +17,13 @@ public class ThreadChatReceive extends Thread{
                     received = received.substring(3,received.length());
                     ApplicationRun.chatPanel.getChatTextLog().setText(ApplicationRun.chatPanel.getChatTextLog().getText() + "\n" + "INIMIGO: " + received);
                 }
-                else{
-                    if(received.substring(0,2).equals("02")){
-                        ApplicationRun.gameBackEnd.receivedString(received.split(" "));
-                        ApplicationRun.gamePanel.updateTable(ApplicationRun.gameBackEnd);
-                    }
+                if(received.substring(0,2).equals("02")){
+                    ApplicationRun.gameBackEnd.receivedString(received.split(" "));
+                    ApplicationRun.gamePanel.updateTable(ApplicationRun.gameBackEnd);
+                }
+                if(received.substring(0,2).equals("03")){
+                    ApplicationRun.gamePanel.winMessage();
+                    this.loop = false;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

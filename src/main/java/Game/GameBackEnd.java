@@ -5,6 +5,7 @@ import MainPackage.ApplicationRun;
 import javax.swing.*;
 import java.util.ArrayList;
 
+import static MainPackage.ApplicationRun.chatPanel;
 import static MainPackage.ApplicationRun.gamePanel;
 import static MainPackage.ApplicationRun.j1;
 
@@ -179,7 +180,8 @@ public class GameBackEnd {
         if(this.left) {
             gamePanel.getTable().get(position-1).setBackground(ApplicationRun.colors.get(4));
             gamePanel.getTable().get(position-1).setText("<");}
-        if(this.right){ gamePanel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));
+        if(this.right){
+            gamePanel.getTable().get(position+1).setBackground(ApplicationRun.colors.get(4));
             gamePanel.getTable().get(position+1).setText(">");}
 
         GamePanel.firstClick = false;
@@ -290,7 +292,6 @@ public class GameBackEnd {
             }
         }
         gamePanel.sendMovement();
-
     }
 
     private void forbiddenMovement(){
@@ -305,5 +306,14 @@ public class GameBackEnd {
         this.down = lin != 9 && (this.colors.get(position + 10) == 0 || this.colors.get(position + 10) == color);
         this.left = cols != 0 && (this.colors.get(position - 1) == 0 || this.colors.get(position - 1) == color);
         this.right = cols != 9 && (this.colors.get(position + 1) == 0 || this.colors.get(position + 1) == color);
+    }
+
+    public void setWinMessage(int i) {
+        for (int j = 0; j < 100; j++) {
+            this.pieces.set(j,11);
+            this.colors.set(j,0);
+        }
+        chatPanel.writeLog("Você Ganhou por desistencia!!");
+        ApplicationRun.run = false;
     }
 }

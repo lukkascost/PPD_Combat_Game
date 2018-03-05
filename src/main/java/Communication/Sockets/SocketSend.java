@@ -1,6 +1,7 @@
 package Communication.Sockets;
 
 import Communication.CommonStatic;
+import MainPackage.ApplicationRun;
 
 import java.io.*;
 
@@ -15,7 +16,7 @@ public class SocketSend extends Thread {
     }
     @Override
     public void run() {
-        while (run) {
+        while (ApplicationRun.run) {
             try {
                 CommonStatic.onDataSend.acquire();
                 this.ostream.writeUTF(CommonStatic.protocolMsg2Send);

@@ -20,7 +20,7 @@ public class SocketReceive extends  Thread {
 
     @Override
     public void run() {
-        while (run) {
+        while (ApplicationRun.run) {
             try {
                 CommonStatic.protocolMsgReceived = istream.readUTF();
                 CommonStatic.onDataReceive.release();
