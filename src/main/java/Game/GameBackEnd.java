@@ -235,18 +235,28 @@ public class GameBackEnd {
             if (vertical == -1 && horizontal == 0){
                 if (this.up)
                     this.movementPiece(position,10,5);
+                else return;
+            }else {
+                if (vertical == 1 && horizontal == 0) {
+                    if (this.down)
+                        this.movementPiece(position, -10, 6);
+                    else return;
+                }else{
+                    if (vertical == 0 && horizontal == 1) {
+                        if (this.right) this.movementPiece(position, -1, 7);
+                        else return;
+                    }else {
+                        if (vertical == 0 && horizontal == -1) {
+                            if (this.left) this.movementPiece(position, 1, 8);
+                            else return;
+                        }else{
+                            return;
+                        }
+                    }
+                }
             }
-            if (vertical == 1 && horizontal == 0) {
-                if (this.down)
-                    this.movementPiece(position,-10,6);
-            }
-            if (vertical == 0 && horizontal == 1){
-                if (this.right) this.movementPiece(position,-1,7);
-            }
-            if (vertical == 0 && horizontal == -1){
-                if (this.left) this.movementPiece(position,1,8);
-            }
-        }
+        }else{
+            return;}
         gamePanel.updateTable(this);
         this.skipPlay();
         CommonStatic.protocolMsg2Send = "05 ";
