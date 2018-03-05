@@ -4,6 +4,7 @@ import Communication.CommonStatic;
 import MainPackage.ApplicationRun;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 import static MainPackage.ApplicationRun.chatPanel;
@@ -247,6 +248,9 @@ public class GameBackEnd {
             }
         }
         gamePanel.updateTable(this);
+        this.skipPlay();
+        CommonStatic.protocolMsg2Send = "05 ";
+        CommonStatic.onDataSend.release();
     }
 
     private void swap(int position1, int position2){
@@ -340,5 +344,18 @@ public class GameBackEnd {
         chatPanel.writeLog("Você Perdeu !!");
         gamePanel.surrender.setEnabled(false);
         ApplicationRun.run = false;
+    }
+    public synchronized void skipPlay(){
+        try {
+            Thread.currentThread().sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ApplicationRun.yourTurn = !ApplicationRun.yourTurn;
+        if(ApplicationRun.yourTurn){
+            chatPanel.writeLog("Sua vez!");
+        }else{
+            chatPanel.writeLog("Aguarde sua Jogada...");
+        }
     }
 }

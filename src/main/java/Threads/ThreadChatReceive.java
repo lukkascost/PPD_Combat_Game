@@ -4,7 +4,6 @@ import Communication.CommonStatic;
 import MainPackage.ApplicationRun;
 
 public class ThreadChatReceive extends Thread{
-    private boolean loop = true;
 
     @Override
     public void run() {
@@ -23,18 +22,18 @@ public class ThreadChatReceive extends Thread{
                 }
                 if(received.substring(0,2).equals("03")){
                     ApplicationRun.gamePanel.winMessage();
-                    this.loop = false;
+                    ApplicationRun.run = false;
                 }
                 if(received.substring(0,2).equals("04")){
                     ApplicationRun.gamePanel.loseMessage();
-                    this.loop = false;
+                    ApplicationRun.run = false;
+                }
+                if(received.substring(0,2).equals("05")){
+                    ApplicationRun.gameBackEnd.skipPlay();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-    }
-    public void setLoop(boolean loop) {
-        this.loop = loop;
     }
 }

@@ -22,7 +22,8 @@ public class ApplicationRun extends Thread {
     public static ArrayList<Color> colors = new ArrayList<>();
     public static boolean j1;
     public static GameBackEnd gameBackEnd;
-public static boolean run = true;
+    public static boolean run = true;
+    public static boolean yourTurn = false;
 
     public static GamePanel gamePanel;
     public static ChatPanel chatPanel;
@@ -69,6 +70,8 @@ public static boolean run = true;
             j1=false;
             chatPanel.writeLog("Connected!!");
             frame.setTitle("Combat Game - J2");
+            yourTurn = false;
+            chatPanel.writeLog("Aguarde sua Jogada...");
         } catch (IOException e) {
             try {
                 chatPanel.writeLog("Um servidor foi iniciado no seu ip, porta: "+port);
@@ -77,6 +80,9 @@ public static boolean run = true;
                 j1 = true;
                 frame.setTitle("Combat Game - J1");
                 chatPanel.writeLog("Connected!!");
+                yourTurn = true;
+                chatPanel.writeLog("Sua vez!");
+
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

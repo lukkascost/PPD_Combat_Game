@@ -17,6 +17,7 @@ public class GamePanel extends JPanel{
     public static boolean firstClick = true;
     public static int positionFirst[] = new int[]{12,12};
     public JButton surrender = new JButton();
+    public JButton restart = new JButton();
 
     public GamePanel(int widthGame,int heightGame) {
 
@@ -59,7 +60,22 @@ public class GamePanel extends JPanel{
             }
         });
         this.surrender.setEnabled(false);
+
+        this.restart.setText("Reiniciar Partida");
+        this.restart.setBounds(200,500,100,30);
+        this.restart.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CommonStatic.protocolMsg2Send = "03 ";
+                chatPanel.writeLog("Você Perdeu !!");
+                ApplicationRun.run = false;
+                CommonStatic.onDataSend.release();
+            }
+        });
+        this.restart.setEnabled(false);
+
         this.add(surrender);
+        this.add(restart);
 
         this.setColor(5,3, colors.get(1));
         this.setColor(5,4, colors.get(1));
@@ -128,15 +144,16 @@ public class GamePanel extends JPanel{
     }
 
     private void onClick(ActionEvent e){
-        JButton button = (JButton) e.getSource();
-        int line = button.getY()/38;
-        int col = button.getX()/38;
+        if(ApplicationRun.yourTurn) {
+            JButton button = (JButton) e.getSource();
+            int line = button.getY() / 38;
+            int col = button.getX() / 38;
 
-        if(firstClick) {
-            gameBackEnd.movementPieceFirstClick(line, col);
-            //TODO chama jogo
-        }else{
-            gameBackEnd.movementPieceSecondClick(line,col);
+            if (firstClick) {
+                gameBackEnd.movementPieceFirstClick(line, col);
+            } else {
+                gameBackEnd.movementPieceSecondClick(line, col);
+            }
         }
     }
 
