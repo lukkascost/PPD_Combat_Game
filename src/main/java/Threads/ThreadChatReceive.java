@@ -25,6 +25,10 @@ public class ThreadChatReceive extends Thread{
                     ApplicationRun.gamePanel.winMessage();
                     this.loop = false;
                 }
+                if(received.substring(0,2).equals("04")){
+                    ApplicationRun.gamePanel.loseMessage();
+                    this.loop = false;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -53,7 +53,7 @@ public class GamePanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 CommonStatic.protocolMsg2Send = "03 ";
-                chatPanel.writeLog("Você Perdeu por desistencia!!");
+                chatPanel.writeLog("Você Perdeu !!");
                 ApplicationRun.run = false;
                 CommonStatic.onDataSend.release();
             }
@@ -141,4 +141,12 @@ public class GamePanel extends JPanel{
     }
 
 
+    public void loseMessage() {
+        if(j1){
+            gameBackEnd.setLoseMessage(3);
+        }else{
+            gameBackEnd.setLoseMessage(2);
+        }
+        this.updateTable(gameBackEnd);
+    }
 }

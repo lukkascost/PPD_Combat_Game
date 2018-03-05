@@ -1,5 +1,6 @@
 package Game;
 
+import Communication.CommonStatic;
 import MainPackage.ApplicationRun;
 
 import javax.swing.*;
@@ -205,7 +206,7 @@ public class GameBackEnd {
             }
         }else{
             if(this.colors.get(position)==3){
-                this.attack(position+ increment ,flagMovement);
+                this.attack(position+ increment , flagMovement);
             }else{
                 this.swap(position, position + increment);}
         }
@@ -273,22 +274,35 @@ public class GameBackEnd {
         this.pieces.set(attacker,value_attacker);
         int value_attacked = this.pieces.get(attacked);
 
-        if(value_attacked == value_attacker){
-            this.pieces.set(attacked,0);
-            this.pieces.set(attacker,0);
-            this.colors.set(attacked,0);
-            this.colors.set(attacker,0);
-        }else{
-            if(value_attacked>value_attacker){
-                this.send.set(attacked,true);
-                this.pieces.set(attacker,0);
-                this.colors.set(attacker,0);
-            }
-            else{
-                this.pieces.set(attacked,value_attacker);
-                this.colors.set(attacked,this.colors.get(attacker));
-                this.pieces.set(attacker,0);
-                this.colors.set(attacker,0);
+        if(value_attacked == 12){
+            CommonStatic.protocolMsg2Send = "03 ";
+            CommonStatic.onDataSend.release();
+            this.setLoseMessage(0);
+            return;
+        }
+        if(value_attacked == 11 && value_attacker == 3){
+            this.pieces.set(attacked, value_attacker);
+            this.colors.set(attacked, this.colors.get(attacker));
+            this.pieces.set(attacker, 0);
+            this.colors.set(attacker, 0);
+        }
+        else {
+            if (value_attacked == value_attacker) {
+                this.pieces.set(attacked, 0);
+                this.pieces.set(attacker, 0);
+                this.colors.set(attacked, 0);
+                this.colors.set(attacker, 0);
+            } else {
+                if (value_attacked > value_attacker) {
+                    this.send.set(attacked, true);
+                    this.pieces.set(attacker, 0);
+                    this.colors.set(attacker, 0);
+                } else {
+                    this.pieces.set(attacked, value_attacker);
+                    this.colors.set(attacked, this.colors.get(attacker));
+                    this.pieces.set(attacker, 0);
+                    this.colors.set(attacker, 0);
+                }
             }
         }
         gamePanel.sendMovement();
@@ -313,7 +327,18 @@ public class GameBackEnd {
             this.pieces.set(j,11);
             this.colors.set(j,0);
         }
-        chatPanel.writeLog("Você Ganhou por desistencia!!");
+        chatPanel.writeLog("Você Ganhou !!");
+        gamePanel.surrender.setEnabled(false);
+        ApplicationRun.run = false;
+    }
+
+    public void setLoseMessage(int i) {
+        for (int j = 0; j < 100; j++) {
+            this.pieces.set(j,11);
+            this.colors.set(j,0);
+        }
+        chatPanel.writeLog("Você Perdeu !!");
+        gamePanel.surrender.setEnabled(false);
         ApplicationRun.run = false;
     }
 }
