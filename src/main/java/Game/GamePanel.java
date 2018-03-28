@@ -1,6 +1,5 @@
 package Game;
 
-import Communication.CommonStatic;
 import MainPackage.ApplicationRun;
 
 import javax.swing.*;
@@ -53,10 +52,7 @@ public class GamePanel extends JPanel{
         this.surrender.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommonStatic.protocolMsg2Send = "03 ";
-                chatPanel.writeLog("Você Perdeu !!");
-                ApplicationRun.run = false;
-                CommonStatic.onDataSend.release();
+                //TODO acao
             }
         });
         this.surrender.setEnabled(false);
@@ -66,10 +62,7 @@ public class GamePanel extends JPanel{
         this.restart.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommonStatic.protocolMsg2Send = "03 ";
-                chatPanel.writeLog("Você Perdeu !!");
-                ApplicationRun.run = false;
-                CommonStatic.onDataSend.release();
+              //TODO acao
             }
         });
         this.restart.setEnabled(false);
@@ -88,10 +81,6 @@ public class GamePanel extends JPanel{
         this.setColor(6,8, colors.get(1));
     }
 
-    public void sendMovement() {
-        CommonStatic.protocolMsg2Send = gameBackEnd.messageToSend();
-        CommonStatic.onDataSend.release();
-    }
 
     public void setColor(int line, int col, Color color){
         this.table.get((line-1)*10 + (col-1)).setBackground(color);
@@ -100,70 +89,20 @@ public class GamePanel extends JPanel{
         return table;
     }
 
-    public void updateTable(GameBackEnd game){
-        for (int i = 0; i < 100; i++) {
-            int color = game.getColors().get(i);
-            int text = game.getPieces().get(i);
+    public void updateTable(){
 
-            this.table.get(i).setBackground(colors.get(color));
-
-            if(color>1) {
-                if(j1){
-                    if(color == 2 && text == 0){
-                        this.table.get(i).setText("--");
-                    }else{
-                        if(text<11) this.table.get(i).setText(text+ "");
-                        if(text==11) this.table.get(i).setText("BO");
-                        if(text==12) this.table.get(i).setText("FL");
-                        if(text>12) this.table.get(i).setText(text+ "");
-                    }
-                }else{
-                    if(color == 3 && text == 0){
-                        this.table.get(i).setText("--");
-                    }else{
-                        if(text<11) this.table.get(i).setText(text+ "");
-                        if(text==11) this.table.get(i).setText("BO");
-                        if(text==12) this.table.get(i).setText("FL");
-                        if(text>12) this.table.get(i).setText(text+ "");
-
-                    }
-                }
-            }else{
-                this.table.get(i).setText("");
-            }
-        }
     }
 
     public void winMessage(){
-        if(j1){
-            gameBackEnd.setWinMessage(3);
-        }else{
-            gameBackEnd.setWinMessage(2);
-        }
-        this.updateTable(gameBackEnd);
+
     }
 
     private void onClick(ActionEvent e){
-        if(ApplicationRun.yourTurn) {
-            JButton button = (JButton) e.getSource();
-            int line = button.getY() / 38;
-            int col = button.getX() / 38;
 
-            if (firstClick) {
-                gameBackEnd.movementPieceFirstClick(line, col);
-            } else {
-                gameBackEnd.movementPieceSecondClick(line, col);
-            }
-        }
     }
 
 
     public void loseMessage() {
-        if(j1){
-            gameBackEnd.setLoseMessage(3);
-        }else{
-            gameBackEnd.setLoseMessage(2);
-        }
-        this.updateTable(gameBackEnd);
+
     }
 }
