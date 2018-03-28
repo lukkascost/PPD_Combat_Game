@@ -60,6 +60,7 @@ public class ChatPanel extends JPanel{
         this.setVisible(true);
 
 //        chat = (IChat) Naming.lookup("rmi://localhost/Chat");
+
         chat = (IChat) LocateRegistry.getRegistry("localhost").lookup("Chat");
         chat.setChatText(this.chatTextLog.getText());
         new ThreadChatReceive().start();

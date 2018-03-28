@@ -65,7 +65,6 @@ public class ApplicationRun extends Thread {
         MainFrame frame = new MainFrame("Combat Game: "+player);
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
-
     }
 
 }
