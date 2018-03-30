@@ -18,6 +18,8 @@ public class ApplicationRun extends Thread {
             "05","05","05","05","06","06","06","06","07","07","07","08","08","09","10","FL","BO","BO","BO","BO","BO","BO"};
     public static ArrayList<Color> colors = new ArrayList<>();
     public static String player;
+    public static String enemy;
+    public static String ip = "localhost";
     public static boolean run = true;
     public static boolean yourTurn = false;
 
@@ -36,8 +38,9 @@ public class ApplicationRun extends Thread {
         colors.add(new Color(175,238,238));
         colors.add(new Color(255,255,179));
 
-        String ip = "localhost";//JOptionPane.showInputDialog("Digite o Caminho do servidor");
-         player = JOptionPane.showInputDialog("Digite seu nome");
+        //ip = JOptionPane.showInputDialog("Digite o Caminho do servidor");
+        player = JOptionPane.showInputDialog("Digite seu nick");
+        enemy = JOptionPane.showInputDialog("Digite o nick do oponente");
 
         Collections.shuffle(Arrays.asList(peaces));
 
@@ -51,10 +54,6 @@ public class ApplicationRun extends Thread {
         try {
             chatPanel = new ChatPanel();
         } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 

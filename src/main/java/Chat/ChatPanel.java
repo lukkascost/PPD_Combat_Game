@@ -1,16 +1,18 @@
 package Chat;
 
 import MainPackage.ApplicationRun;
+import RMI.ChatImplementation;
 import RMI.IChat;
-import Threads.ThreadChatReceive;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+
+import static MainPackage.ApplicationRun.ip;
 
 public class ChatPanel extends JPanel{
 
@@ -21,9 +23,11 @@ public class ChatPanel extends JPanel{
     private JScrollPane logSP = new JScrollPane(log);
     private AbstractAction abstractAction;
     private IChat chat ;
+    private IChat chatEnemy ;
 
 
-    public ChatPanel() throws RemoteException, NotBoundException, MalformedURLException {
+
+    public ChatPanel() throws RemoteException {
         this.writedText = new JTextField();
         this.chatTextLog = new ChatText();
         this.send = new JButton("->",new ImageIcon("src/java/Chat/send.png"));
@@ -58,39 +62,44 @@ public class ChatPanel extends JPanel{
         this.setLayout(null);
         this.setBounds(500,0,380,560);
         this.setVisible(true);
-
-//        chat = (IChat) Naming.lookup("rmi://localhost/Chat");
-
-        chat = (IChat) LocateRegistry.getRegistry("localhost").lookup("Chat");
-        chat.setChatText(this.chatTextLog.getText());
-        new ThreadChatReceive().start();
+        chat = new ChatImplementation();
+        LocateRegistry.getRegistry(ip).rebind(ApplicationRun.player,chat);
 
     }
 
     private void onClick(){
         if(!this.writedText.equals("")) {
-            try {
-                this.chat.writeMessage(this.writedText.getText(), ApplicationRun.player);
+            if (hasEnemy()) {
+                try {
+                    this.chat.writeMessage(this.writedText.getText(), ApplicationRun.player);
+                    this.chatEnemy.writeMessage(this.writedText.getText(), ApplicationRun.player);
+                    this.writedText.setText("");
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                this.log.append("Inimigo ainda nao conectado! Aguarde sua conexão...\n");
                 this.writedText.setText("");
-            } catch (RemoteException e) {
-                e.printStackTrace();
             }
         }
     }
-    public void writeLog(String msg){
-        this.log.append(msg+"\n");
-        this.log.setCaretPosition(this.log.getDocument().getLength());
 
-    }
     public ChatText getChatTextLog() {
         return chatTextLog;
     }
 
-    public void setChatTextLog(ChatText chatTextLog) {
-        this.chatTextLog = chatTextLog;
-    }
-
-    public IChat getChat() {
-        return chat;
+    public boolean hasEnemy(){
+        if (this.chatEnemy !=  null) return true;
+        try {
+            chatEnemy = (IChat) LocateRegistry.getRegistry(ip).lookup(ApplicationRun.enemy);
+            return true;
+        }
+        catch (NotBoundException e){
+        } catch (AccessException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -1,14 +1,12 @@
 package Game;
 
-import MainPackage.ApplicationRun;
-
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-import static MainPackage.ApplicationRun.*;
+import static MainPackage.ApplicationRun.colors;
 
 public class GamePanel extends JPanel{
 
