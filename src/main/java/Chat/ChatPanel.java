@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 import static MainPackage.ApplicationRun.ip;
+import static MainPackage.ApplicationRun.player;
 
 public class ChatPanel extends JPanel{
 
@@ -22,8 +23,8 @@ public class ChatPanel extends JPanel{
     private JTextArea log = new JTextArea();
     private JScrollPane logSP = new JScrollPane(log);
     private AbstractAction abstractAction;
-    private IChat chat ;
-    private IChat chatEnemy ;
+    public IChat chat ;
+    public IChat chatEnemy ;
 
 
 
@@ -33,7 +34,11 @@ public class ChatPanel extends JPanel{
         this.send = new JButton("->",new ImageIcon("src/java/Chat/send.png"));
         this.abstractAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                onClick();
+                try {
+                    onClick();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         };
 
@@ -63,12 +68,12 @@ public class ChatPanel extends JPanel{
         this.setBounds(500,0,380,560);
         this.setVisible(true);
         chat = new ChatImplementation();
-        LocateRegistry.getRegistry(ip).rebind(ApplicationRun.player,chat);
+        LocateRegistry.getRegistry(ip).rebind(ApplicationRun.player+"-chat",chat);
 
     }
 
-    private void onClick(){
-        if(!this.writedText.equals("")) {
+    private void onClick() throws RemoteException {
+        if(!this.writedText.getText().equals("")) {
             if (hasEnemy()) {
                 try {
                     this.chat.writeMessage(this.writedText.getText(), ApplicationRun.player);
@@ -78,7 +83,7 @@ public class ChatPanel extends JPanel{
                     e.printStackTrace();
                 }
             }else{
-                this.log.append("Inimigo ainda nao conectado! Aguarde sua conexão...\n");
+                this.writeLog("Inimigo ainda nao conectado! Aguarde sua conexão...");
                 this.writedText.setText("");
             }
         }
@@ -88,18 +93,25 @@ public class ChatPanel extends JPanel{
         return chatTextLog;
     }
 
-    public boolean hasEnemy(){
+
+    public boolean hasEnemy() throws RemoteException {
         if (this.chatEnemy !=  null) return true;
         try {
-            chatEnemy = (IChat) LocateRegistry.getRegistry(ip).lookup(ApplicationRun.enemy);
+            chatEnemy = (IChat) LocateRegistry.getRegistry(ip).lookup(ApplicationRun.enemy+"-chat");
             return true;
         }
-        catch (NotBoundException e){
+        catch (NotBoundException ignored){
         } catch (AccessException e) {
-            e.printStackTrace();
-        } catch (RemoteException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void writeLog(String s) {
+        this.log.append(s+"\n");
+    }
+    public void writeLogBoth(String s) throws RemoteException {
+        this.log.append(player+": "+s+"\n");
+        this.chatEnemy.writeLog(s,player);
     }
 }
