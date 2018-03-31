@@ -12,8 +12,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-import static MainPackage.ApplicationRun.ip;
-import static MainPackage.ApplicationRun.player;
+import static MainPackage.ApplicationRun.*;
 
 public class ChatPanel extends JPanel{
 
@@ -98,6 +97,8 @@ public class ChatPanel extends JPanel{
         if (this.chatEnemy !=  null) return true;
         try {
             chatEnemy = (IChat) LocateRegistry.getRegistry(ip).lookup(ApplicationRun.enemy+"-chat");
+            gamePanel.restart.setEnabled(true);
+            gamePanel.surrender.setEnabled(true);
             return true;
         }
         catch (NotBoundException ignored){
@@ -113,5 +114,31 @@ public class ChatPanel extends JPanel{
     public void writeLogBoth(String s) throws RemoteException {
         this.log.append(player+": "+s+"\n");
         this.chatEnemy.writeLog(s,player);
+    }
+    public void iWin() throws RemoteException {
+        chat.writeLog("Você ganhou!!",player);
+        chatEnemy.writeLog("Você Perdeu!!",enemy);
+    }
+    public void iLose() throws RemoteException {
+        chatEnemy.writeLog("Você ganhou!!",enemy);
+        chat.writeLog("Você Perdeu!!",player);
+    }
+    public void restart() throws RemoteException, NotBoundException {
+        int enemyResult = chatEnemy.restartMatch();
+        if (enemyResult == 0){
+            int myResult = chat.restartMatch();
+            if(myResult == 0){
+                ApplicationRun.frame.dispose();
+                ApplicationRun.iniciaPartida();
+                chatEnemy.atualizaGlobal();
+                chat.writeLog("Partida Reiniciada.","System");
+                chatEnemy.writeLog("Partida Reiniciada.","System");
+            }else{
+                chatEnemy.writeLog("Seu inimigo nao aceitou o reinicio.","System");
+            }
+        }else{
+            chat.writeLog("Seu inimigo nao aceitou o reinicio.","System");
+        }
+
     }
 }

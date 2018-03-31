@@ -9,6 +9,7 @@ import java.awt.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +26,8 @@ public class ApplicationRun extends Thread {
     public static boolean j1 = false;
     public static GamePanel gamePanel;
     public static ChatPanel chatPanel;
+    public static JPanel mainPannel;
+    public static MainFrame frame;
 
 
     public static void main(String[] args)  {
@@ -38,19 +41,29 @@ public class ApplicationRun extends Thread {
         colors.add(new Color(255,228,225));
         colors.add(new Color(175,238,238));
         colors.add(new Color(255,255,179));
+        colors.add(new Color(254,228,225));
+        colors.add(new Color(174,238,238));
+
         try {
             LocateRegistry.createRegistry(1099);
             j1 = true;
             yourTurn = true;
         } catch (RemoteException ignored) {
         }
-        //ip = JOptionPane.showInputDialog("Digite o Caminho do servidor");
+        do{
+            ip = JOptionPane.showInputDialog("Digite o Caminho do servidor","localhost");
+        }while (!verificaHost(ip));
         player = JOptionPane.showInputDialog("Digite seu nick");
         enemy = JOptionPane.showInputDialog("Digite o nick do oponente");
+        iniciaPartida();
+    }
+    public boolean verificaHost(String host){
+        return true;
 
+    }
+    public static void iniciaPartida(){
         Collections.shuffle(Arrays.asList(peaces));
-
-        JPanel mainPannel = new JPanel();
+        mainPannel = new JPanel();
         mainPannel.setLayout(null);
 
         int widthGame = 480;
@@ -71,11 +84,8 @@ public class ApplicationRun extends Thread {
         mainPannel.add(chatPanel);
         mainPannel.setBackground(Color.lightGray);
 
-        MainFrame frame = new MainFrame("Combat Game: "+player);
+        frame = new MainFrame("Combat Game: "+player);
         frame.setBackground(Color.lightGray);
         frame.add(mainPannel);
-
-        gamePanel.surrender.setEnabled(true);
     }
-
 }

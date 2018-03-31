@@ -20,8 +20,8 @@ public class GamePanel extends JPanel{
     public static boolean firstClick = true;
     public static int positionFirst[] = new int[]{12,12};
     public JButton surrender = new JButton();
-    private JButton restart = new JButton();
-    private IGame globalGame;
+    public JButton restart = new JButton();
+    public IGame globalGame;
 
     public GamePanel(int widthGame,int heightGame) throws RemoteException, NotBoundException {
 
@@ -61,7 +61,13 @@ public class GamePanel extends JPanel{
         this.surrender.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO acao
+                try {
+                    globalGame.cleanGame();
+                    chatPanel.iLose();
+
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         this.surrender.setEnabled(false);
@@ -72,6 +78,13 @@ public class GamePanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO acao
+                try {
+                    chatPanel.restart();
+                } catch (RemoteException e1) {
+                    e1.printStackTrace();
+                } catch (NotBoundException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         this.restart.setEnabled(false);
@@ -138,7 +151,6 @@ public class GamePanel extends JPanel{
                 JButton button = (JButton) e.getSource();
                 int line = button.getY() / 38;
                 int col = button.getX() / 38;
-
                 if (firstClick) {
                     int position = (line*10) + col;
                     if (globalGame.movementPieceFirstClick(line, col, ApplicationRun.j1)){
