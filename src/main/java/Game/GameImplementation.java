@@ -118,36 +118,38 @@ public class GameImplementation extends UnicastRemoteObject implements IGame {
         return true;
     }
 
-    public boolean movementPieceSecondClick(int line, int col,int vertical,int horizontal, boolean j1) throws RemoteException {
+    public String movementPieceSecondClick(int line, int col,int vertical,int horizontal, boolean j1) throws RemoteException {
 
         int position = (line*10) + col;
 
         if(!(vertical>1 || vertical<-1 || horizontal>1 || horizontal<-1)) {
             if (vertical == -1 && horizontal == 0){
-                if (this.up)
-                    this.movementPiece(position,10, j1);
-                else return false;
+                if (this.up){
+                    if (this.movementPiece(position,10, j1).equals("Lose") ) return "Lose";}
+                else return "ERROR";
             }else {
                 if (vertical == 1 && horizontal == 0) {
-                    if (this.down)
-                        this.movementPiece(position, -10, j1);
-                    else return false;
+                    if (this.down){
+                        if (this.movementPiece(position, -10, j1).equals("Lose") ) return "Lose";}
+                    else return "ERROR";
                 }else{
                     if (vertical == 0 && horizontal == 1) {
-                        if (this.right) this.movementPiece(position, -1, j1);
-                        else return false;
+                        if (this.right){
+                            if (this.movementPiece(position, -1, j1).equals("Lose") ) return "Lose";}
+                        else return "ERROR";
                     }else {
                         if (vertical == 0 && horizontal == -1) {
-                            if (this.left) this.movementPiece(position, 1, j1);
-                            else return false;
+                            if (this.left){
+                                if (this.movementPiece(position, 1, j1).equals("Lose") ) return "Lose";}
+                            else return "ERROR";
                         }else{
-                            return false;
+                            return "ERROR";
                         }
                     }
                 }
             }
-        }else{ return false;}
-        return true;
+        }else{ return "ERROR";}
+        return "OK";
 
     }
 
@@ -171,7 +173,7 @@ public class GameImplementation extends UnicastRemoteObject implements IGame {
         GamePanel.positionFirst = new int[]{12,12};
         GamePanel.firstClick = true;
     }
-    public void swap(int position1, int position2){
+    public String swap(int position1, int position2){
         int aux = this.pieces.get(position1);
         this.pieces.set(position1,this.pieces.get(position2));
         this.pieces.set(position2,aux);
@@ -179,6 +181,7 @@ public class GameImplementation extends UnicastRemoteObject implements IGame {
         aux = this.colors.get(position1);
         this.colors.set(position1,this.colors.get(position2));
         this.colors.set(position2,aux);
+        return "";
     }
 
     private String combat(int attacker, int attacked){
@@ -221,21 +224,23 @@ public class GameImplementation extends UnicastRemoteObject implements IGame {
         }
         return "";
     }
-    private void movementPiece(int position, int increment,boolean j1) {
+    private String movementPiece(int position, int increment,boolean j1) {
+        String result = "";
         if (j1) {
             if(this.colors.get(position)==2){
-                this.combat(position + increment , position);
+                result =  this.combat(position + increment , position);
             }else {
-                this.swap(position, position + increment);
+                result = this.swap(position, position + increment);
 
             }
         }else{
             if(this.colors.get(position)==3){
-                this.combat(position + increment , position);
+                result = this.combat(position + increment , position);
             }else{
-                this.swap(position, position + increment);
+                result = this.swap(position, position + increment);
             }
         }
+        return  result;
     }
     public ArrayList<Integer> getPieces() {
         return pieces;

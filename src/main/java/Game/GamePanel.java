@@ -173,10 +173,21 @@ public class GamePanel extends JPanel{
                     int vertical = line - positionFirst[0];
                     int horizontal = col - positionFirst[1];
                     firstClick = true;
-                    if (globalGame.movementPieceSecondClick(line, col, vertical, horizontal, ApplicationRun.j1)) {
-                        gamePanel.updateTable();
-                        chatPanel.chat.skipTurnChat();
-                        chatPanel.chatEnemy.skipTurnChat();
+                    String result = globalGame.movementPieceSecondClick(line, col, vertical, horizontal, ApplicationRun.j1);
+                    switch (result){
+                        case "OK":
+                            gamePanel.updateTable();
+                            chatPanel.chat.skipTurnChat();
+                            chatPanel.chatEnemy.skipTurnChat();
+                            break;
+                        case "Lose":
+                            globalGame.cleanGame();
+                            chatPanel.iWin();
+                            break;
+                        case "ERROR":
+                            break;
+                        default:
+                            break;
                     }
                 }
             }

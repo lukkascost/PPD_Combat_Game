@@ -110,6 +110,8 @@ public class ChatPanel extends JPanel{
 
     public void writeLog(String s) {
         this.log.append(s+"\n");
+        this.log.setCaretPosition(this.log.getDocument().getLength());
+
     }
     public void writeLogBoth(String s) throws RemoteException {
         this.log.append(player+": "+s+"\n");
