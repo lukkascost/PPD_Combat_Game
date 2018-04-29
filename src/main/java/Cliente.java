@@ -17,12 +17,12 @@ public class Cliente {
         selectNode();
         Contact contato1 = new Contact("lucas","997667126");
         for(Contact c:contactsNode.data()){
-            System.out.printf(c.name+" - "+c.number);
+            System.out.println(c.name+" - "+c.number);
         }
         try {
             contactsNode.addContact(contato1);
-        } catch (Agenda.user_exists user_exists) {
-            System.out.println("Contato já existe: "+ user_exists.contact.name+ " - "+user_exists.contact.number);
+        }  catch (Agenda.ContactsNodePackage.user_exists user_exists) {
+            System.out.println("Contato: "+user_exists.contact.name+" já existe!!");
         }
         System.out.printf(connectedIn);
     }

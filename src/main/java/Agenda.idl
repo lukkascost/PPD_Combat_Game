@@ -3,13 +3,12 @@ struct Contact {
         string name;
         string number;
      };
-
-exception unknown_user { Contact contact;};
-exception user_exists { Contact contact;};
-exception empty_list {};
 typedef sequence<Contact> CustomerSeq;
 
 interface ContactsNode{
+exception unknown_user { Contact contact;};
+exception user_exists { Contact contact;};
+exception empty_list {};
     attribute CustomerSeq data;
     boolean addContact(in Contact contact) raises (user_exists);
     boolean deleteContact(in Contact contact) raises (unknown_user);

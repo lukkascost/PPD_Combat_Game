@@ -1,4 +1,6 @@
 import Agenda.*;
+import Agenda.ContactsNodePackage.unknown_user;
+import Agenda.ContactsNodePackage.user_exists;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
@@ -33,7 +35,7 @@ public class ContactsNodeImpl extends ContactsNodePOA{
     }
 
     public boolean addContact(Contact contact) throws user_exists {
-        if (data.containsKey(contact.name)) throw new user_exists();
+        if (data.containsKey(contact.name)) throw new user_exists(contact);
         data.put(contact.name,contact.number);
         setIsAlive("Agenda1", data());
         setIsAlive("Agenda2", data());

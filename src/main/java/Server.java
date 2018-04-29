@@ -3,7 +3,7 @@ import org.omg.CosNaming.*;
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 
-public class Servidor {
+public class Server {
 
     public static void main(String[] args) {
         try{
@@ -39,7 +39,7 @@ public class Servidor {
 
             rootPOA.the_POAManager().activate();
 
-            System.out.println("Servidor Pronto ...");
+            System.out.println("Server Pronto ...");
 
             orb.run();
 
