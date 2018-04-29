@@ -1,17 +1,19 @@
 module Agenda{
-
-interface ContactsNode{
-     struct Contact {
+struct Contact {
         string name;
         string number;
      };
-    typedef sequence<Contact> CustomerSeq;
-    exception unknown_user { Contact contact;};
-	exception user_exists { Contact contact;};
-	exception empty_list {};
+
+exception unknown_user { Contact contact;};
+exception user_exists { Contact contact;};
+exception empty_list {};
+typedef sequence<Contact> CustomerSeq;
+
+interface ContactsNode{
+    attribute CustomerSeq data;
     boolean addContact(in Contact contact) raises (user_exists);
     boolean deleteContact(in Contact contact) raises (unknown_user);
-    boolean updateContact(in Contact oldContact, in Contact newContact) raises (user_exists,unknown_user);
-    void getListContacts(out CustomerSeq contacts) raises (empty_list);
+    boolean updateContact(in Contact oldContact, in Contact newContact) raises (unknown_user);
+    string searchContact(in string name) raises (unknown_user);
     };
 };
