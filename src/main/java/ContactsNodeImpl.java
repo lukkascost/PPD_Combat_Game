@@ -77,7 +77,7 @@ public  class ContactsNodeImpl extends ContactsNodePOA{
 
     public boolean updateContact(Contact oldContact, Contact newContact) throws unknown_user {
         if (!data.containsKey(oldContact.name)) throw new unknown_user(oldContact);
-        data.replace(oldContact.name,oldContact.number,newContact.number);
+        data.replace(oldContact.name,newContact.number);
 
         setIsAlive("Agenda1", data());
         setIsAlive("Agenda2", data());

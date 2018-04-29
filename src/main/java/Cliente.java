@@ -164,6 +164,7 @@ public class Cliente {
 
         try {
             contactsNode.updateContact(new Contact(oldName,""),new Contact(oldName,number));
+            System.out.println("USUARIO MODIFICADO COM SUCESSO!!!");
         } catch (Agenda.ContactsNodePackage.unknown_user unknown_user) {
             System.err.println("O usuario informado nao existe!!!");
         }
