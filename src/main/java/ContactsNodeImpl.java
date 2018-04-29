@@ -10,9 +10,29 @@ import org.omg.CosNaming.NamingContextHelper;
 import java.util.Hashtable;
 import java.util.Set;
 
-public class ContactsNodeImpl extends ContactsNodePOA{
+public  class ContactsNodeImpl extends ContactsNodePOA{
     public Hashtable data = new Hashtable();
 
+    public ContactsNodeImpl(String instanceName) {
+        if(instanceName.equals("Agenda1")){
+            getIsAlive("Agenda2");
+            if(!data.isEmpty()) return;
+            getIsAlive("Agenda3");
+            return;
+        }
+        if(instanceName.equals("Agenda2")){
+            getIsAlive("Agenda3");
+            if(!data.isEmpty()) return;
+            getIsAlive("Agenda1");
+            return;
+        }
+        if(instanceName.equals("Agenda3")){
+            getIsAlive("Agenda2");
+            if(!data.isEmpty()) return;
+            getIsAlive("Agenda1");
+            return;
+        }
+    }
 
     public Contact[] data() {
         if (data.isEmpty())return new Contact[0];
@@ -64,8 +84,10 @@ public class ContactsNodeImpl extends ContactsNodePOA{
         setIsAlive("Agenda3", data());
         return true;
     }
-    public String searchContact(String name) {
-        return (String) this.data.getOrDefault(name, "");
+    public String searchContact(String name) throws unknown_user {
+        if (!data.containsKey(name)) throw new unknown_user(new Contact(name,""));
+
+        return (String) this.data.get(name);
     }
 
     public void setIsAlive(String node, Contact[] data ){
@@ -88,6 +110,26 @@ public class ContactsNodeImpl extends ContactsNodePOA{
         } catch (Exception notFound) {
             return;
         }
+    }
+    public void getIsAlive(String node ){
+        ORB orb = ORB.init(new String[0], null);
+        org.omg.CORBA.Object obj = null;
 
+        try {
+            obj = orb.resolve_initial_references("NameService");
+        } catch (InvalidName invalidName) {
+            return;
+        }
+
+        NamingContext naming = NamingContextHelper.narrow(obj);
+        NameComponent[] name = {new NameComponent(node, "Exemplo")};
+        org.omg.CORBA.Object objRef = null;
+        try {
+            objRef = naming.resolve(name);
+            ContactsNode objectRemote = ContactsNodeHelper.narrow(objRef);
+            this.data(objectRemote.data());
+        } catch (Exception notFound) {
+            return;
+        }
     }
 }
