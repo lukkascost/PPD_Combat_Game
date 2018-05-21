@@ -44,10 +44,44 @@
         </plugins>
     </build>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/net.jini/jini-core -->
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jini-core</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.jini/jini-ext -->
+        <dependency>
+            <groupId>net.jini</groupId>
+            <artifactId>jini-ext</artifactId>
+            <version>2.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.river/reggie-dl -->
+        <dependency>
+            <groupId>org.apache.river</groupId>
+            <artifactId>reggie-dl</artifactId>
+            <version>2.2.1</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.river/outrigger -->
+        <dependency>
+            <groupId>org.apache.river</groupId>
+            <artifactId>outrigger</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+            <version>1.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.4</version>
         </dependency>
     </dependencies>
 </project>
