@@ -7,4 +7,6 @@ public class Environment implements  Entry{
     public String chat;
     public Environment() {
     }
+
+
 }

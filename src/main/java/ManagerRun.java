@@ -7,6 +7,7 @@ import net.jini.core.transaction.TransactionException;
 import net.jini.space.JavaSpace;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.jws.soap.SOAPBinding;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -33,13 +34,13 @@ public class ManagerRun {
             while (running){
                 clear();
                 title("Agenda de Contatos");
-                System.out.println("0 - Listar Ambiente;");
+                System.out.println("0 - Listar Ambientes;");
                 System.out.println("1 - Criar Ambiente;");
                 System.out.println("2 - Excluir Ambiente;");
-                System.out.println("3 - Listar Usuario;");
+                System.out.println("3 - Listar Usuarios;");
                 System.out.println("4 - Criar Usuario;");
                 System.out.println("5 - Excluir Usuario;");
-                System.out.println("5 - Mover Usuario;");
+                System.out.println("6 - Mover Usuario;");
                 System.out.print("Escolha uma opcao: ");
                 int i;
                 try {
@@ -60,6 +61,16 @@ public class ManagerRun {
                             System.out.print("Pressione enter para continuar.... ");
                             System.in.read();
                             break ;
+                        case 3:
+                            listUser();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
+                        case 4 :
+                            createUser();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
                     }
                 }catch (InputMismatchException ex){
                     System.err.println("Digite um numero inteiro!!");
@@ -115,6 +126,17 @@ public class ManagerRun {
         }
 
     }
+    public static void listUser() throws RemoteException, TransactionException, InterruptedException, UnusableEntryException {
+        title("Lista de Usuarios");
+        getExistingUsers();
+        int i = 1;
+        for (String st:users.keySet()) {
+            System.out.println(i+"| "+st+ " - Ambiente: "+users.getOrDefault(st,""));
+            i++;
+
+        }
+
+    }
 
     public static void createEnvironment() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
         title("Criar Ambientes");
@@ -133,6 +155,39 @@ public class ManagerRun {
         result.chat = "";
         space.write(result,null,Lease.FOREVER);
         System.out.println("\t Ambiente Criado com sucesso ");
+    }
+
+    public static void createUser() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Criar Usuario");
+        int usrCount = 1;
+        User user = new User();
+        user.name = "user"+usrCount;
+        User result;
+        result = (User) space.readIfExists(user, null, Long.MAX_VALUE);
+
+        while (result != null) {
+            usrCount++;
+            user.name = "user"+usrCount;
+            result = (User) space.readIfExists(user, null, Long.MAX_VALUE);
+        }
+        result = new User();
+        result.name = "user"+usrCount;
+
+        Environment env;
+        String name = "";
+        do {
+            env = new Environment();
+            System.out.print("Digite o nome do ambiente: ");
+            name = in.next();
+            env.name = name;
+            env = (Environment) space.readIfExists(env, null, Long.MAX_VALUE);
+            if(env == null){
+                System.out.println("Ambiente incorreto, digite novamente.");
+            }
+        }while(env==null);
+        result.environment = name;
+        space.write(result,null,Lease.FOREVER);
+        System.out.println("\t Usuario criado com sucesso ");
 
 
     }
