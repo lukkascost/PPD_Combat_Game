@@ -71,6 +71,11 @@ public class ManagerRun {
                             System.out.print("Pressione enter para continuar.... ");
                             System.in.read();
                             break;
+                        case 5:
+                            deleteUser();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
                     }
                 }catch (InputMismatchException ex){
                     System.err.println("Digite um numero inteiro!!");
@@ -111,7 +116,28 @@ public class ManagerRun {
         env = new Environment();
         env.name = name;
         env = (Environment) space.take(env,null,Lease.FOREVER);
+        System.out.println(" Ambiente excluido com sucesso!");
 
+
+
+    }
+    private static void deleteUser() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Remover Usuario");
+        System.out.print("Digite o nome do usuario: ");
+        String name = in.next();
+
+        User user = new User();
+        user.name = name;
+        user = (User) space.readIfExists(user, null, Long.MAX_VALUE);
+        if(user == null ){
+            System.out.println(" Usuario informado nao existe.");
+            return;
+        }
+
+        user = new User();
+        user.name = name;
+        user = (User) space.take(user,null,Lease.FOREVER);
+        System.out.println(" Ambiente excluido com sucesso!");
 
     }
 
