@@ -79,6 +79,11 @@ public class ManagerRun {
                             System.out.print("Pressione enter para continuar.... ");
                             System.in.read();
                             break;
+                        case 6:
+                            moveUser();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
                     }
                 }catch (InputMismatchException ex){
                     System.err.println("Digite um numero inteiro!!");
@@ -218,6 +223,41 @@ public class ManagerRun {
         space.write(result,null,Lease.FOREVER);
         System.out.println("\t Usuario criado com sucesso ");
 
+
+    }
+
+    public static void moveUser() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Mover Usuario");
+        System.out.print("Digite o nome do usuario: ");
+        String name = in.next();
+
+        User user = new User();
+        user.name = name;
+        user = (User) space.readIfExists(user, null, Long.MAX_VALUE);
+        if(user == null ){
+            System.out.println(" Usuario informado nao existe.");
+            return;
+        }
+        System.out.print("Digite o nome do ambiente destino: ");
+        name = in.next();
+
+        Environment env = new Environment();
+        env.name = name;
+        if (name.equals(user.environment)){
+            System.out.println(" Voce nao pode mover o usuario para o ambiente ao qual ele ja está inserido.");
+            return;
+        }
+        env = (Environment) space.readIfExists(env, null, Long.MAX_VALUE);
+        if(env == null) {
+            System.out.println(" Ambiente nao existe.");
+            return;
+        }
+
+        user = (User) space.takeIfExists(user,null,Long.MAX_VALUE);
+        user.environment  = env.name;
+
+        space.write(user,null, Lease.FOREVER);
+        System.out.println("Usuario movido com sucesso!");
 
     }
 

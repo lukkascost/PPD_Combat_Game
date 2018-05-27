@@ -24,7 +24,7 @@ public class ChatPannel extends JPanel{
     private ChatText chatTextLog;
     private AbstractAction abstractAction;
     private JComboBox comboBoxUser;
-
+    private JLabel userLabel;
 
     public ChatPannel() {
         this.writedText = new JTextField();
@@ -46,8 +46,12 @@ public class ChatPannel extends JPanel{
         sp.setBounds(10,10,360,400);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        this.userLabel = new JLabel("User - '' Ambiente - '' ");
+        this.userLabel.setBounds(10,450,360,30);
+        this.userLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         this.comboBoxUser = new JComboBox();
-        comboBoxUser.setBounds(10,300,360,400);
+        comboBoxUser.setBounds(10,480,360,30);
         try {
             boxFill();
         } catch (RemoteException e) {
@@ -65,7 +69,7 @@ public class ChatPannel extends JPanel{
         }
         comboBoxUser.addActionListener (new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                updateChat();
             }
         });
 
@@ -73,6 +77,7 @@ public class ChatPannel extends JPanel{
         this.add(writedText);
         this.add(send);
         this.add(comboBoxUser);
+        this.add(userLabel);
         this.setBackground(Color.lightGray);
         this.setLayout(null);
         this.setBounds(0,0,380,560);
@@ -123,6 +128,7 @@ public class ChatPannel extends JPanel{
             env.name = user.environment;
             env = (Environment) space.readIfExists(env, null, Long.MAX_VALUE);
             this.chatTextLog.setText(env.chat);
+            this.userLabel.setText("USER: "+user.name+" - AMBIENTE: "+env.name);
         } catch (UnusableEntryException e) {
             e.printStackTrace();
         } catch (TransactionException e) {
