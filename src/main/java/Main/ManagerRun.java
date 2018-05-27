@@ -1,3 +1,5 @@
+package Main;
+
 import Tup.Device;
 import Tup.Environment;
 import Tup.User;
@@ -10,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.jws.soap.SOAPBinding;
 import java.rmi.RemoteException;
 import java.util.*;
+import Tup.Lookup;
 
 public class ManagerRun {
     public static boolean running = true;

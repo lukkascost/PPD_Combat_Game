@@ -1,15 +1,18 @@
+package Main;
+
 import UI.ChatPannel;
+import UI.ThreadChat;
 import net.jini.space.JavaSpace;
 
 import javax.swing.*;
 import java.awt.*;
-
+import Tup.Lookup;
 public class ChatUserUI {
 
-    static JavaSpace space;
+    public static JavaSpace space;
     static JFrame frame;
     static JPanel mainPannel;
-    static ChatPannel chatPannel;
+    public static ChatPannel chatPannel;
 
     public static void main(String[] args) {
         try {
@@ -44,6 +47,7 @@ public class ChatUserUI {
         frame.setResizable(false);
         frame.setSize(380, 560);
 
+        new ThreadChat().start();
 
     }
 }
