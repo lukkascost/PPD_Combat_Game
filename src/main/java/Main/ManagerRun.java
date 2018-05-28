@@ -9,19 +9,17 @@ import net.jini.core.transaction.TransactionException;
 import net.jini.space.JavaSpace;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.jws.soap.SOAPBinding;
 import java.rmi.RemoteException;
 import java.util.*;
 import Tup.Lookup;
 
 public class ManagerRun {
-    public static boolean running = true;
-    static Scanner in = new Scanner(System.in);
-    static final String line = new String(new char[48]).replace('\0', '-');
-    static JavaSpace space;
-    static Hashtable<String ,Integer > enviroments = new Hashtable<String, Integer>();
-    static Hashtable<String ,String > users = new Hashtable<String, String>();
-    static Hashtable<String ,String > devices = new Hashtable<String, String>();
+    private static Scanner in = new Scanner(System.in);
+    private static final String line = new String(new char[48]).replace('\0', '-');
+    private static JavaSpace space;
+    private static Hashtable<String ,Integer > environments = new Hashtable<>();
+    private static Hashtable<String ,String > users = new Hashtable<>();
+    private static Hashtable<String ,String > devices = new Hashtable<>();
 
 
     public static void main(String[] args) {
@@ -35,7 +33,7 @@ public class ManagerRun {
             }
             System.out.println("O servico JavaSpace foi encontrado.");
 
-            while (running){
+            while (true){
                 clear();
                 title("Agenda de Contatos");
                 System.out.println("00 - Listar Ambientes;");
@@ -56,60 +54,40 @@ public class ManagerRun {
                     switch (i) {
                         case 0 :
                             listEnvironment();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break ;
                         case 1 :
                             createEnvironment();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break ;
                         case 2 :
                             deleteEnvironment();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break ;
                         case 3:
                             listUser();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 4 :
                             createUser();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 5:
                             deleteUser();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 6:
                             moveUser();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 7:
                             listDevice();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 8:
                             createDevice();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 9:
                             deleteDevice();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                         case 10:
                             moveDevice();
-                            System.out.print("Pressione enter para continuar.... ");
-                            System.in.read();
                             break;
                     }
+                    System.out.print("Pressione enter para continuar.... ");
+                    System.in.read();
                 }catch (InputMismatchException ex){
                     System.err.println("Digite um numero inteiro!!");
                     in.next();
@@ -148,7 +126,7 @@ public class ManagerRun {
         }
         env = new Environment();
         env.name = name;
-        env = (Environment) space.take(env,null,Lease.FOREVER);
+        space.take(env,null,Lease.FOREVER);
         System.out.println(" Ambiente excluido com sucesso!");
 
 
@@ -199,7 +177,7 @@ public class ManagerRun {
         title("Lista de Ambientes");
         getExistingEnvironments();
         int i = 1;
-        for (String st:enviroments.keySet()) {
+        for (String st: environments.keySet()) {
             System.out.println(i+"| "+st);
             i++;
 
@@ -400,14 +378,14 @@ public class ManagerRun {
 
     public static void getExistingEnvironments() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
         List<Environment> environmentList = new ArrayList<>();
-        enviroments = new Hashtable<>();
+        environments = new Hashtable<>();
         Environment result;
         do{
             result = new Environment();
             result = (Environment) space.takeIfExists(result, null, Long.MAX_VALUE);
             if (result != null){
                 environmentList.add(result);
-                enviroments.put(result.name,0);
+                environments.put(result.name,0);
             }
         }while (result!= null);
 
