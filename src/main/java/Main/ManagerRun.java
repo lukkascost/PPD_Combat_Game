@@ -21,6 +21,7 @@ public class ManagerRun {
     static JavaSpace space;
     static Hashtable<String ,Integer > enviroments = new Hashtable<String, Integer>();
     static Hashtable<String ,String > users = new Hashtable<String, String>();
+    static Hashtable<String ,String > devices = new Hashtable<String, String>();
 
 
     public static void main(String[] args) {
@@ -37,13 +38,17 @@ public class ManagerRun {
             while (running){
                 clear();
                 title("Agenda de Contatos");
-                System.out.println("0 - Listar Ambientes;");
-                System.out.println("1 - Criar Ambiente;");
-                System.out.println("2 - Excluir Ambiente;");
-                System.out.println("3 - Listar Usuarios;");
-                System.out.println("4 - Criar Usuario;");
-                System.out.println("5 - Excluir Usuario;");
-                System.out.println("6 - Mover Usuario;");
+                System.out.println("00 - Listar Ambientes;");
+                System.out.println("01 - Criar Ambiente;");
+                System.out.println("02 - Excluir Ambiente;");
+                System.out.println("03 - Listar Usuarios;");
+                System.out.println("04 - Criar Usuario;");
+                System.out.println("05 - Excluir Usuario;");
+                System.out.println("06 - Mover Usuario;");
+                System.out.println("07 - Listar Dispositivos;");
+                System.out.println("08 - Criar Dispositivo;");
+                System.out.println("09 - Excluir Dispositivo;");
+                System.out.println("10 - Mover Dispositivo;");
                 System.out.print("Escolha uma opcao: ");
                 int i;
                 try {
@@ -81,6 +86,26 @@ public class ManagerRun {
                             break;
                         case 6:
                             moveUser();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
+                        case 7:
+                            listDevice();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
+                        case 8:
+                            createDevice();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
+                        case 9:
+                            deleteDevice();
+                            System.out.print("Pressione enter para continuar.... ");
+                            System.in.read();
+                            break;
+                        case 10:
+                            moveDevice();
                             System.out.print("Pressione enter para continuar.... ");
                             System.in.read();
                             break;
@@ -129,6 +154,7 @@ public class ManagerRun {
 
 
     }
+
     private static void deleteUser() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
         title("Remover Usuario");
         System.out.print("Digite o nome do usuario: ");
@@ -145,7 +171,27 @@ public class ManagerRun {
         user = new User();
         user.name = name;
         user = (User) space.take(user,null,Lease.FOREVER);
-        System.out.println(" Ambiente excluido com sucesso!");
+        System.out.println(" Usuario excluido com sucesso!");
+
+    }
+
+    private static void deleteDevice() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Remover Dispositivo");
+        System.out.print("Digite o nome do dispositivo: ");
+        String name = in.next();
+
+        Device dev = new Device();
+        dev.name = name;
+        dev = (Device) space.readIfExists(dev, null, Long.MAX_VALUE);
+        if(dev == null ){
+            System.out.println(" Dispositivo informado nao existe.");
+            return;
+        }
+
+        dev = new Device();
+        dev.name = name;
+        dev = (Device) space.take(dev,null,Lease.FOREVER);
+        System.out.println(" Dispositivo excluido com sucesso!");
 
     }
 
@@ -160,12 +206,25 @@ public class ManagerRun {
         }
 
     }
+
     public static void listUser() throws RemoteException, TransactionException, InterruptedException, UnusableEntryException {
         title("Lista de Usuarios");
         getExistingUsers();
         int i = 1;
         for (String st:users.keySet()) {
             System.out.println(i+"| "+st+ " - Ambiente: "+users.getOrDefault(st,""));
+            i++;
+
+        }
+
+    }
+
+    public static void listDevice() throws RemoteException, TransactionException, InterruptedException, UnusableEntryException {
+        title("Lista de Dispositivos");
+        getExistingDevices();
+        int i = 1;
+        for (String st:devices.keySet()) {
+            System.out.println(i+"| "+st+ " - Ambiente: "+devices.getOrDefault(st,""));
             i++;
 
         }
@@ -208,7 +267,42 @@ public class ManagerRun {
         result.name = "user"+usrCount;
 
         Environment env;
-        String name = "";
+        env = getEnvironmentFromKeyboard();
+        result.environment = env.name;
+        space.write(result,null,Lease.FOREVER);
+        System.out.println("\t Usuario criado com sucesso ");
+
+
+    }
+
+    public static void createDevice() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Criar Dispositivo");
+        int devCount = 1;
+        Device dev = new Device();
+        dev.name = "disp"+devCount;
+        Device result;
+        result = (Device) space.readIfExists(dev, null, Long.MAX_VALUE);
+
+        while (result != null) {
+            devCount++;
+            dev.name = "disp"+devCount;
+            result = (Device) space.readIfExists(dev, null, Long.MAX_VALUE);
+        }
+        result = new Device();
+        result.name = "disp"+devCount;
+
+        Environment env;
+        env = getEnvironmentFromKeyboard();
+        result.environment = env.name;
+        space.write(result,null,Lease.FOREVER);
+        System.out.println("\t Dispositivo criado com sucesso ");
+
+
+    }
+
+    private static Environment getEnvironmentFromKeyboard() throws UnusableEntryException, TransactionException, InterruptedException, RemoteException {
+        Environment env;
+        String name;
         do {
             env = new Environment();
             System.out.print("Digite o nome do ambiente: ");
@@ -219,11 +313,7 @@ public class ManagerRun {
                 System.out.println("Ambiente incorreto, digite novamente.");
             }
         }while(env==null);
-        result.environment = name;
-        space.write(result,null,Lease.FOREVER);
-        System.out.println("\t Usuario criado com sucesso ");
-
-
+        return env;
     }
 
     public static void moveUser() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
@@ -261,11 +351,47 @@ public class ManagerRun {
 
     }
 
+    public static void moveDevice() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        title("Mover Dispositivo");
+        System.out.print("Digite o nome do dispositivo: ");
+        String name = in.next();
+
+        Device dev = new Device();
+        dev.name = name;
+        dev = (Device) space.readIfExists(dev, null, Long.MAX_VALUE);
+        if(dev == null ){
+            System.out.println(" Dispositivo informado nao existe.");
+            return;
+        }
+        System.out.print("Digite o nome do ambiente destino: ");
+        name = in.next();
+
+        Environment env = new Environment();
+        env.name = name;
+        if (name.equals(dev.environment)){
+            System.out.println(" Voce nao pode mover o dispositivo para o ambiente ao qual ele ja está inserido.");
+            return;
+        }
+        env = (Environment) space.readIfExists(env, null, Long.MAX_VALUE);
+        if(env == null) {
+            System.out.println(" Ambiente nao existe.");
+            return;
+        }
+
+        dev = (Device) space.takeIfExists(dev,null,Long.MAX_VALUE);
+        dev.environment  = env.name;
+
+        space.write(dev,null, Lease.FOREVER);
+        System.out.println("Dispositivo movido com sucesso!");
+
+    }
+
     public static void clear(){
         for (int i = 0; i < 100; i++) {
             System.out.println("\t");
         }
     }
+
     public static void title(String titleString){
         System.out.println(line);
         System.out.println(StringUtils.center(titleString, 50));
@@ -291,6 +417,7 @@ public class ManagerRun {
 
 
     }
+
     public static void getExistingUsers() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
         List<User> userList = new ArrayList<>();
         users = new Hashtable<>();
@@ -306,6 +433,25 @@ public class ManagerRun {
 
         for (User u :userList) {
             space.write( u ,null, Lease.FOREVER);
+        }
+
+    }
+
+    public static void getExistingDevices() throws TransactionException, UnusableEntryException, RemoteException, InterruptedException {
+        List<Device> deviceList = new ArrayList<>();
+        devices = new Hashtable<>();
+        Device result;
+        do{
+            result = new Device();
+            result = (Device) space.takeIfExists(result, null, Long.MAX_VALUE);
+            if (result != null){
+                deviceList.add(result);
+                devices.put(result.name,result.environment);
+            }
+        }
+        while (result!= null);
+        for (Device d : deviceList) {
+            space.write( d ,null, Lease.FOREVER);
         }
 
     }
