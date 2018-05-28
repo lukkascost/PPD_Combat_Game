@@ -19,7 +19,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>Cliente</mainClass>
+                  <mainClass>Main.ChatUserUI</mainClass>
                 </transformer>
               </transformers>
             </configuration>

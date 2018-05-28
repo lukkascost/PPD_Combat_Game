@@ -24,7 +24,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>Cliente</mainClass>
+                                    <mainClass>Main.ChatUserUI</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
