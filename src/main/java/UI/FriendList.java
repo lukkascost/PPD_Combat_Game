@@ -1,20 +1,16 @@
 package UI;
 
-import MainPackage.ApplicationRun;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import static MainPackage.ApplicationRun.chatPanel;
 
-public class FriendList extends JList {
-
-    private ListSelectionListener listener ;
+class FriendList extends JList {
 
 
-    public FriendList() {
-        listener = e -> FriendList.this.valueChanged(e);
+    FriendList() {
+        ListSelectionListener listener = FriendList.this::valueChanged;
 
         this.addListSelectionListener(listener);
         this.setBounds(10,40, 360,300);
@@ -24,7 +20,7 @@ public class FriendList extends JList {
     }
 
 
-    public void valueChanged(ListSelectionEvent listSelectionEvent){
+    private void valueChanged(ListSelectionEvent listSelectionEvent){
         JList list = (JList) listSelectionEvent.getSource();
         String selectedValue = (String) list.getSelectedValue();
         int selectedIndex = list.getSelectedIndex();

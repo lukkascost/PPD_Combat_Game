@@ -40,7 +40,7 @@ public class OptionsPanel extends JPanel {
     }
 
     private void onClick() {
-        DefaultListModel<String> model = (DefaultListModel) this.friendList.getModel();
+        DefaultListModel model = (DefaultListModel) this.friendList.getModel();
         model.addElement("AnotherFriend");
         this.friendList.setModel(model);
     }
