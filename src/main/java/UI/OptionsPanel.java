@@ -3,32 +3,42 @@ package UI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static MainPackage.ApplicationRun.chatPanel;
+
 public class OptionsPanel extends JPanel {
 
     private FriendList friendList;
-    private AbstractAction abstractAction;
-
+    private AbstractAction abstractActionAdd;
+    private AbstractAction abstractActionRemove;
+    private int count =0;
 
     public OptionsPanel(){
         this.setLayout(null);
         this.setBounds(0,0,380,560);
-        this.abstractAction = new AbstractAction() {
+        this.abstractActionAdd =  new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                    onClick();
-               
+                addFriend(e);
             }
         };
-
+        this.abstractActionRemove = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                removeFriend(e);
+            }
+        };
 
         this.friendList = new FriendList();
         JScrollPane sp = new JScrollPane(friendList);
         sp.setBounds(10,40, 360,300);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-
         JButton addFriend = new JButton("+");
-        addFriend.setBounds(10,370, 30,30);
-        addFriend.addActionListener(abstractAction);
+        addFriend.setBounds(10,350, 30,30);
+        addFriend.addActionListener(abstractActionAdd);
+
+        JButton removeFriend = new JButton("-");
+        removeFriend.setBounds(40,350, 30,30);
+        removeFriend.addActionListener(abstractActionRemove);
+
 
         JLabel friendLabel = new JLabel("Amigos adicionados: ");
         friendLabel.setBounds(10,10,360,30);
@@ -37,11 +47,24 @@ public class OptionsPanel extends JPanel {
         this.add(sp);
         this.add(friendLabel);
         this.add(addFriend);
+        this.add(removeFriend);
     }
 
-    private void onClick() {
+    private void addFriend(ActionEvent e) {
         DefaultListModel model = (DefaultListModel) this.friendList.getModel();
-        model.addElement("AnotherFriend");
+        count+=1;
+        model.addElement("AnotherFriend" + count);
         this.friendList.setModel(model);
     }
+    private void removeFriend(ActionEvent e) {
+        if (this.friendList.getSelectedIndex() == -1){
+            chatPanel.writeLog("Selecione um amigo para remover!");
+            return;
+        }
+        DefaultListModel model = (DefaultListModel) this.friendList.getModel();
+        model.removeElement(this.friendList.getSelectedValue());
+        this.friendList.setModel(model);
+
+    }
+
 }

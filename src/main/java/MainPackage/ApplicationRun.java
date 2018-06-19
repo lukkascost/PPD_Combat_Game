@@ -2,6 +2,7 @@ package MainPackage;
 
 import UI.ChatPanel;
 import UI.MainFrame;
+import UI.OnlineCheckBox;
 import UI.OptionsPanel;
 
 import javax.swing.*;
@@ -15,9 +16,7 @@ public class ApplicationRun extends Thread {
     public static ChatPanel chatPanel;
     public static JPanel mainPannel;
     public static OptionsPanel optionsPanel;
-
-
-
+    public static JCheckBox isOnline;
 
     public static void main(String[] args)  {
         new ApplicationRun().start();
@@ -27,10 +26,13 @@ public class ApplicationRun extends Thread {
     public void run(){
         setPlayerName();
 
+        isOnline = new OnlineCheckBox("Online");
+
         mainPannel = new JPanel();
         mainPannel.setLayout(null);
 
         optionsPanel = new OptionsPanel();
+        optionsPanel.add(isOnline);
 
         chatPanel = new ChatPanel();
         mainPannel.add(chatPanel);
