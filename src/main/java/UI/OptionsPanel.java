@@ -3,6 +3,8 @@ package UI;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
+import static MainPackage.ApplicationRun.activeChat;
+import static MainPackage.ApplicationRun.activeChatStatus;
 import static MainPackage.ApplicationRun.chatPanel;
 
 public class OptionsPanel extends JPanel {
@@ -53,7 +55,9 @@ public class OptionsPanel extends JPanel {
     private void addFriend(ActionEvent e) {
         DefaultListModel model = (DefaultListModel) this.friendList.getModel();
         count+=1;
-        model.addElement("AnotherFriend" + count);
+        String newFriend = JOptionPane.showInputDialog("Digite o nick do amigo.");
+        //TODO saber se o amigo existe ou nao.
+        model.addElement(newFriend);
         this.friendList.setModel(model);
     }
     private void removeFriend(ActionEvent e) {
@@ -65,6 +69,12 @@ public class OptionsPanel extends JPanel {
         model.removeElement(this.friendList.getSelectedValue());
         this.friendList.setModel(model);
 
+        activeChat.setText("Nome: --");
+        activeChatStatus.setSelected(false);
+    }
+
+    public String getSelectedFriendName(){
+        return (String) this.friendList.getSelectedValue();
     }
 
 }

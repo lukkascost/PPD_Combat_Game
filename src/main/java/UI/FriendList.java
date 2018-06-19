@@ -4,13 +4,14 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import static MainPackage.ApplicationRun.chatPanel;
+import static MainPackage.ApplicationRun.*;
+
 
 class FriendList extends JList {
 
 
     FriendList() {
-        ListSelectionListener listener = FriendList.this::valueChanged;
+        ListSelectionListener listener = e -> valueChanged(e);
 
         this.addListSelectionListener(listener);
         this.setBounds(10,40, 360,300);
@@ -25,7 +26,8 @@ class FriendList extends JList {
         String selectedValue = (String) list.getSelectedValue();
         int selectedIndex = list.getSelectedIndex();
         if(selectedIndex!= -1) {
-            chatPanel.writeLog(selectedValue + " " + selectedIndex);
+            activeChat.setText("Nome: "+selectedValue);
+            activeChatStatus.setSelected(chatPanel.isFriendChatOnline(selectedValue));
         }
     }
 }
