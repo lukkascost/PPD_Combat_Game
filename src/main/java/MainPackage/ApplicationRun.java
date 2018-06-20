@@ -21,6 +21,7 @@ public class ApplicationRun extends Thread {
     public static JLabel activeChat;
     public static JCheckBox activeChatStatus;
     public static String ip = "localhost";
+    public static int port = 4040;
     public static Hashtable friendChatContent = new Hashtable();
 
 
