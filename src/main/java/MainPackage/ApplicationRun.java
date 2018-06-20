@@ -30,6 +30,7 @@ public class ApplicationRun extends Thread {
 
     public void run(){
 
+
         setPlayerName();
         activeChat = new JLabel("Nome: --");
         activeChat.setBounds(10,10,200,30);

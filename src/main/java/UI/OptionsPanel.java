@@ -14,7 +14,6 @@ public class OptionsPanel extends JPanel {
     public FriendList friendList;
     private AbstractAction abstractActionAdd;
     private AbstractAction abstractActionRemove;
-    private int count =0;
 
     public OptionsPanel(){
         this.setLayout(null);
@@ -53,13 +52,8 @@ public class OptionsPanel extends JPanel {
         this.add(removeFriend);
     }
 
-    public void addInList(String name){
-        DefaultListModel model = (DefaultListModel) this.friendList.getModel();
-        model.addElement(name);
-        this.friendList.setModel(model);
-    }
+
     private void addFriend(ActionEvent e) {
-        count+=1;
         String newFriend;
         newFriend = JOptionPane.showInputDialog("Digite o nick do amigo.");
         if (!RMIMethods.existFriendObject(newFriend)) {
@@ -68,7 +62,7 @@ public class OptionsPanel extends JPanel {
         }
         try {
             IChat friend = RMIMethods.getRMIChatObject(newFriend);
-            addInList(newFriend);
+            friendList.addInList(newFriend);
 
             if(!ApplicationRun.friendChatContent.containsKey(newFriend)){
                 ApplicationRun.friendChatContent.put(newFriend,"");
@@ -84,6 +78,7 @@ public class OptionsPanel extends JPanel {
             return;
         }
         DefaultListModel model = (DefaultListModel) this.friendList.getModel();
+        friendChatContent.remove(this.friendList.getSelectedValue());
         model.removeElement(this.friendList.getSelectedValue());
         this.friendList.setModel(model);
 

@@ -9,10 +9,10 @@ import javax.swing.event.ListSelectionListener;
 import static MainPackage.ApplicationRun.*;
 
 
-class FriendList extends JList {
+public class FriendList extends JList {
 
 
-    FriendList() {
+    public FriendList() {
         ListSelectionListener listener = e -> valueChanged(e);
 
         this.addListSelectionListener(listener);
@@ -28,11 +28,19 @@ class FriendList extends JList {
         String selectedValue = (String) list.getSelectedValue();
         int selectedIndex = list.getSelectedIndex();
         if(selectedIndex!= -1) {
+            chatPanel.writedText.setEditable(true);
             activeChat.setText("Nome: "+selectedValue);
             activeChatStatus.setSelected(RMIMethods.isFriendChatOnline(selectedValue));
             chatPanel.updateActualChat();
         }
+        else{
+            chatPanel.writedText.setEditable(false);
+        }
     }
-
+    public void addInList(String name){
+        DefaultListModel model = (DefaultListModel) this.getModel();
+        model.addElement(name);
+        this.setModel(model);
+    }
 
 }

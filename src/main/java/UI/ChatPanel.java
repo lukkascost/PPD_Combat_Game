@@ -14,7 +14,7 @@ import static RMI.RMIMethods.setRMIChatObject;
 
 public class ChatPanel extends JPanel {
 
-    private JTextField writedText;
+    public JTextField writedText;
     private JButton send;
     public ChatText chatTextLog;
     private JTextArea log = new JTextArea();
@@ -41,6 +41,7 @@ public class ChatPanel extends JPanel {
 
         writedText.setBounds(10,415,420,30);
         writedText.addActionListener(this.abstractAction);
+        writedText.setEditable(false);
 
 
         JScrollPane sp = new JScrollPane(chatTextLog);   // JTextArea is placed in a JScrollPane.
@@ -89,8 +90,14 @@ public class ChatPanel extends JPanel {
 
         try {
             IChat friend = RMIMethods.getRMIChatObject(friendName);
-            chat.writeMessage(this.writedText.getText(),playerName,friendName);
-            friend.writeMessage(this.writedText.getText(),playerName,playerName);
+            if (friend.isOnlineChecked()) {
+                chat.writeMessage(this.writedText.getText(), playerName, friendName);
+                friend.writeMessage(this.writedText.getText(), playerName, playerName);
+            }
+            else{
+                //TODO enviar para fila do webService.
+                log.append("Enviado para webService... Amigo offline\n");
+            }
         }
         catch (Exception e){
             log.append(e.getMessage());

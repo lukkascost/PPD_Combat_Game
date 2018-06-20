@@ -16,7 +16,7 @@ public class ChatImplementation extends UnicastRemoteObject implements IChat {
     public String writeMessage(String message, String player, String saveIn) {
         if(!friendChatContent.containsKey(saveIn)){
             friendChatContent.put(saveIn,"");
-            optionsPanel.addInList(saveIn);
+            optionsPanel.friendList.addInList(saveIn);
         }
         String chatContent = (String) friendChatContent.get(saveIn);
         chatContent += player+ ": " +message+"\n";
