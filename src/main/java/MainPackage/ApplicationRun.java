@@ -4,6 +4,9 @@ import UI.ChatPanel;
 import UI.MainFrame;
 import UI.OnlineCheckBox;
 import UI.OptionsPanel;
+import WebService.IChatService;
+import WebService.IChatServiceImpl;
+import WebService.IChatServiceImplService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +26,7 @@ public class ApplicationRun extends Thread {
     public static String ip = "localhost";
     public static int port = 4040;
     public static Hashtable friendChatContent = new Hashtable();
-
+    public static IChatService iChatService;
 
     public static void main(String[] args)  {
         new ApplicationRun().start();
@@ -31,8 +34,12 @@ public class ApplicationRun extends Thread {
 
     public void run(){
 
+        IChatServiceImplService iChatServiceImplService = new IChatServiceImplService();
+        iChatService = iChatServiceImplService.getIChatServiceImplPort();
 
         setPlayerName();
+
+        iChatService.createQueue(playerName);
         activeChat = new JLabel("Nome: --");
         activeChat.setBounds(10,10,200,30);
 
