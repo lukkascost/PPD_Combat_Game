@@ -1,15 +1,19 @@
 package UI;
 
+import MainPackage.ApplicationRun;
+import RMI.IChat;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 
-import static MainPackage.ApplicationRun.activeChat;
-import static MainPackage.ApplicationRun.activeChatStatus;
-import static MainPackage.ApplicationRun.chatPanel;
+import static MainPackage.ApplicationRun.*;
 
 public class OptionsPanel extends JPanel {
 
-    private FriendList friendList;
+    public FriendList friendList;
     private AbstractAction abstractActionAdd;
     private AbstractAction abstractActionRemove;
     private int count =0;
@@ -41,7 +45,6 @@ public class OptionsPanel extends JPanel {
         removeFriend.setBounds(40,350, 30,30);
         removeFriend.addActionListener(abstractActionRemove);
 
-
         JLabel friendLabel = new JLabel("Amigos adicionados: ");
         friendLabel.setBounds(10,10,360,30);
 
@@ -52,13 +55,32 @@ public class OptionsPanel extends JPanel {
         this.add(removeFriend);
     }
 
-    private void addFriend(ActionEvent e) {
+    public void addInList(String name){
         DefaultListModel model = (DefaultListModel) this.friendList.getModel();
-        count+=1;
-        String newFriend = JOptionPane.showInputDialog("Digite o nick do amigo.");
-        //TODO saber se o amigo existe ou nao.
-        model.addElement(newFriend);
+        model.addElement(name);
         this.friendList.setModel(model);
+    }
+    private void addFriend(ActionEvent e) {
+        count+=1;
+        String newFriend;
+        newFriend = JOptionPane.showInputDialog("Digite o nick do amigo.");
+        if (!existFriendObject(newFriend)) {
+            chatPanel.writeLog("USUARIO NAO EXISTE!!!");
+            return;
+        }
+        try {
+            IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(newFriend+"-chat");
+            addInList(newFriend);
+
+            if(!ApplicationRun.friendChatContent.containsKey(newFriend)){
+                ApplicationRun.friendChatContent.put(newFriend,"");
+            }
+            ApplicationRun.friendChatContent.replace(newFriend, friend.getChatWith(ApplicationRun.playerName));
+        } catch (RemoteException e1) {
+            e1.printStackTrace();
+        } catch (NotBoundException e1) {
+            e1.printStackTrace();
+        }
     }
     private void removeFriend(ActionEvent e) {
         if (this.friendList.getSelectedIndex() == -1){
@@ -75,6 +97,17 @@ public class OptionsPanel extends JPanel {
 
     public String getSelectedFriendName(){
         return (String) this.friendList.getSelectedValue();
+    }
+
+    public boolean existFriendObject(String name){
+        try {
+            LocateRegistry.getRegistry(ip).lookup(name+"-chat");
+            return true;
+        } catch (RemoteException e) {
+            return false;
+        } catch (NotBoundException e) {
+            return false;
+        }
     }
 
 }

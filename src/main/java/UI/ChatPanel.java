@@ -25,7 +25,6 @@ public class ChatPanel extends JPanel {
     private JScrollPane logSP = new JScrollPane(log);
     private AbstractAction abstractAction;
     public IChat chat ;
-    public IChat friendChat ;
 
 
 
@@ -79,7 +78,19 @@ public class ChatPanel extends JPanel {
     private void onClick()  {
         if (!this.writedText.getText().equals("")){
             if (optionsPanel.getSelectedFriendName() != null){
-                //TODO fazer enviar para os dois chats.
+                String friendName = optionsPanel.getSelectedFriendName();
+                if(optionsPanel.existFriendObject(friendName)){
+                    try {
+                        IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(friendName+"-chat");
+                        chat.writeMessage(this.writedText.getText(),playerName,friendName);
+                        friend.writeMessage(this.writedText.getText(),playerName,playerName);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    }
+                    catch (Exception e){}
+                }
 
             }else{
                 //TODO erro, amigo nao selecionado.
@@ -95,27 +106,21 @@ public class ChatPanel extends JPanel {
 
      }
 
-     public boolean isFriendChatOnline(String player_name){
-         try {
-             return friendChat.isOnlineChecked();
-         } catch (RemoteException e) {
-             e.printStackTrace();
-         }
-         return false;
-     }
 
-    public boolean hasFriend() throws RemoteException {
-        if (this.friendChat !=  null) return true;
+    public boolean isFriendChatOnline(String selectedValue) {
         try {
-            friendChat = (IChat) LocateRegistry.getRegistry(ip).lookup(optionsPanel.getSelectedFriendName()+"-chat");
-            return true;
-        }
-        catch (NotBoundException ignored){
-        }
-        catch (AccessException e) {
+            IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(selectedValue+"-chat");
+            return friend.isOnlineChecked();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (NotBoundException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    public void updateActualChat(){
+        String selectedValue = optionsPanel.getSelectedFriendName();
+        this.chatTextLog.setText((String) ApplicationRun.friendChatContent.get(selectedValue));
+    }
 }

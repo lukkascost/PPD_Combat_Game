@@ -1,5 +1,7 @@
 package UI;
 
+import MainPackage.ApplicationRun;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -28,6 +30,7 @@ class FriendList extends JList {
         if(selectedIndex!= -1) {
             activeChat.setText("Nome: "+selectedValue);
             activeChatStatus.setSelected(chatPanel.isFriendChatOnline(selectedValue));
+            chatPanel.updateActualChat();
         }
     }
 }
