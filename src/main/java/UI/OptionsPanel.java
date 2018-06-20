@@ -2,12 +2,10 @@ package UI;
 
 import MainPackage.ApplicationRun;
 import RMI.IChat;
+import RMI.RMIMethods;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 
 import static MainPackage.ApplicationRun.*;
 
@@ -64,21 +62,19 @@ public class OptionsPanel extends JPanel {
         count+=1;
         String newFriend;
         newFriend = JOptionPane.showInputDialog("Digite o nick do amigo.");
-        if (!existFriendObject(newFriend)) {
+        if (!RMIMethods.existFriendObject(newFriend)) {
             chatPanel.writeLog("USUARIO NAO EXISTE!!!");
             return;
         }
         try {
-            IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(newFriend+"-chat");
+            IChat friend = RMIMethods.getRMIChatObject(newFriend);
             addInList(newFriend);
 
             if(!ApplicationRun.friendChatContent.containsKey(newFriend)){
                 ApplicationRun.friendChatContent.put(newFriend,"");
             }
             ApplicationRun.friendChatContent.replace(newFriend, friend.getChatWith(ApplicationRun.playerName));
-        } catch (RemoteException e1) {
-            e1.printStackTrace();
-        } catch (NotBoundException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
     }
@@ -95,19 +91,8 @@ public class OptionsPanel extends JPanel {
         activeChatStatus.setSelected(false);
     }
 
-    public String getSelectedFriendName(){
-        return (String) this.friendList.getSelectedValue();
-    }
 
-    public boolean existFriendObject(String name){
-        try {
-            LocateRegistry.getRegistry(ip).lookup(name+"-chat");
-            return true;
-        } catch (RemoteException e) {
-            return false;
-        } catch (NotBoundException e) {
-            return false;
-        }
-    }
+
+
 
 }

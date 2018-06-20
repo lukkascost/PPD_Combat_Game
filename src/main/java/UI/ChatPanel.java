@@ -3,18 +3,14 @@ package UI;
 import MainPackage.ApplicationRun;
 import RMI.ChatImplementation;
 import RMI.IChat;
-
+import RMI.RMIMethods;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.rmi.AccessException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
 
 import static MainPackage.ApplicationRun.*;
+import static RMI.RMIMethods.setRMIChatObject;
 
 public class ChatPanel extends JPanel {
 
@@ -35,7 +31,7 @@ public class ChatPanel extends JPanel {
         this.send = new JButton("->",new ImageIcon("src/java/Chat/send.png"));
         this.abstractAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                    onClick();
+                onClick();
 
             }
         };
@@ -65,10 +61,12 @@ public class ChatPanel extends JPanel {
         this.setLayout(null);
         this.setBounds(400,0,480,560);
         this.setVisible(true);
+
+
         try {
             chat = new ChatImplementation();
-            LocateRegistry.getRegistry(ip).rebind(playerName+"-chat",chat);
-        } catch (RemoteException e) {
+            setRMIChatObject(chat,playerName);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -76,51 +74,41 @@ public class ChatPanel extends JPanel {
     }
 
     private void onClick()  {
-        if (!this.writedText.getText().equals("")){
-            if (optionsPanel.getSelectedFriendName() != null){
-                String friendName = optionsPanel.getSelectedFriendName();
-                if(optionsPanel.existFriendObject(friendName)){
-                    try {
-                        IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(friendName+"-chat");
-                        chat.writeMessage(this.writedText.getText(),playerName,friendName);
-                        friend.writeMessage(this.writedText.getText(),playerName,playerName);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (NotBoundException e) {
-                        e.printStackTrace();
-                    }
-                    catch (Exception e){}
-                }
+        if (this.writedText.getText().equals("")) return;
+        if (optionsPanel.friendList.getSelectedValue() == null) {
+            this.writedText.setText("");
+            return;
+        }
 
-            }else{
-                //TODO erro, amigo nao selecionado.
-            }
+        String friendName = (String) optionsPanel.friendList.getSelectedValue();
+
+        if(!RMIMethods.existFriendObject(friendName)){
+            this.writedText.setText("");
+            return;
+        }
+
+        try {
+            IChat friend = RMIMethods.getRMIChatObject(friendName);
+            chat.writeMessage(this.writedText.getText(),playerName,friendName);
+            friend.writeMessage(this.writedText.getText(),playerName,playerName);
+        }
+        catch (Exception e){
+            log.append(e.getMessage());
         }
         this.writedText.setText("");
     }
 
 
-     public void writeLog(String s) {
-         this.log.append(s + "\n");
-         this.log.setCaretPosition(this.log.getDocument().getLength());
+    public void writeLog(String s) {
+        this.log.append(s + "\n");
+        this.log.setCaretPosition(this.log.getDocument().getLength());
 
-     }
-
-
-    public boolean isFriendChatOnline(String selectedValue) {
-        try {
-            IChat friend = (IChat) LocateRegistry.getRegistry(ip).lookup(selectedValue+"-chat");
-            return friend.isOnlineChecked();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (NotBoundException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     public void updateActualChat(){
-        String selectedValue = optionsPanel.getSelectedFriendName();
+        String selectedValue = (String) optionsPanel.friendList.getSelectedValue();
         this.chatTextLog.setText((String) ApplicationRun.friendChatContent.get(selectedValue));
+        activeChatStatus.setSelected(RMIMethods.isFriendChatOnline(selectedValue));
+
     }
 }

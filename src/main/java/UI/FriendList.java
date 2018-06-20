@@ -1,6 +1,6 @@
 package UI;
 
-import MainPackage.ApplicationRun;
+import RMI.RMIMethods;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -29,8 +29,10 @@ class FriendList extends JList {
         int selectedIndex = list.getSelectedIndex();
         if(selectedIndex!= -1) {
             activeChat.setText("Nome: "+selectedValue);
-            activeChatStatus.setSelected(chatPanel.isFriendChatOnline(selectedValue));
+            activeChatStatus.setSelected(RMIMethods.isFriendChatOnline(selectedValue));
             chatPanel.updateActualChat();
         }
     }
+
+
 }
