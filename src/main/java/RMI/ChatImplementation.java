@@ -1,6 +1,6 @@
 package RMI;
 
-import javax.swing.*;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -13,7 +13,7 @@ public class ChatImplementation extends UnicastRemoteObject implements IChat {
     }
 
     @Override
-    public String writeMessage(String message, String player, String saveIn) throws RemoteException {
+    public String writeMessage(String message, String player, String saveIn) {
         if(!friendChatContent.containsKey(saveIn)){
             friendChatContent.put(saveIn,"");
             optionsPanel.addInList(saveIn);
@@ -26,12 +26,12 @@ public class ChatImplementation extends UnicastRemoteObject implements IChat {
     }
 
     @Override
-    public boolean isOnlineChecked() throws RemoteException {
+    public boolean isOnlineChecked() {
         return isOnline.isSelected();
     }
 
 
-    public String getChatWith(String name) throws RemoteException {
+    public String getChatWith(String name) {
         if(friendChatContent.containsKey(name)) {
             return (String) friendChatContent.get(name);
         } else {
