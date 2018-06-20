@@ -95,8 +95,8 @@ public class ChatPanel extends JPanel {
                 friend.writeMessage(this.writedText.getText(), playerName, playerName);
             }
             else{
-                //TODO enviar para fila do webService.
-                log.append("Enviado para webService... Amigo offline\n");
+                iChatService.writeMessage(playerName+": "+this.writedText.getText(),friendName);
+                chat.writeMessage(this.writedText.getText(), playerName, friendName);
             }
         }
         catch (Exception e){
